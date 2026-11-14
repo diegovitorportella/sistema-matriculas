@@ -220,8 +220,7 @@ _Em construção._
 .
 ├── README.md
 ├── /docs
-│   ├── /diagramas      # Diagramas UML (casos de uso, classes) — todas as versões
-│   └── lucidchart-prompts.md
+│   └── /diagramas      # Diagramas UML (casos de uso, classes) — todas as versões
 ├── /backend            # Spring Boot (a criar)
 └── /frontend           # React + Vite (a criar)
 ```
