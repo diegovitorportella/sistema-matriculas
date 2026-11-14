@@ -20,7 +20,7 @@
 | :--- | :---: |
 | Modelo de Análise (Casos de Uso + Histórias de Usuário) | ✅ |
 | Projeto Estrutural: projeto Spring Boot com classes, atributos e stubs | ✅ |
-| Projeto Estrutural: Diagrama de Classes (Lucidchart) | ⏳ |
+| Projeto Estrutural: Diagrama de Classes (Lucidchart) | ✅ |
 | Autenticação | ⏳ |
 | Protótipo (React + Vite + MongoDB Atlas) | ⏳ |
 | Correção dos diagramas | ⏳ |
@@ -197,7 +197,12 @@ Contexto: projeto acadêmico (Laboratório 03 — DIAW, Engenharia de Software, 
 
 ## 🏗 Arquitetura e Diagrama de Classes
 
-<!-- TODO (próxima etapa): diagrama de classes + descrição da arquitetura em camadas -->
+### Diagrama de Classes
+
+![Diagrama de Classes](docs/diagramas/classes.png)
+
+As classes do pacote `model` do back-end seguem este diagrama (atributos e assinaturas dos métodos); as associações são persistidas com `@DBRef` no MongoDB.
+
 Arquitetura prevista: **API REST em camadas** (controller → service → repository) com Spring Boot, front-end SPA em React + Vite e persistência em MongoDB Atlas.
 
 ---
