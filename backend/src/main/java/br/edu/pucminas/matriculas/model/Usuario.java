@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
@@ -16,8 +18,15 @@ public abstract class Usuario {
     private String login;
     private String senhaHash;
 
-    /** Valida a senha informada contra o hash armazenado (implementação na etapa de Autenticação). */
+    private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
+
+    /** Valida a senha informada contra o hash BCrypt armazenado. */
     public boolean autenticar(String senha) {
-        throw new UnsupportedOperationException("Não implementado");
+        return senha != null && senhaHash != null && ENCODER.matches(senha, senhaHash);
+    }
+
+    /** Perfil de acesso, derivado do tipo concreto do usuário. */
+    public String perfil() {
+        return getClass().getSimpleName().toUpperCase();
     }
 }
