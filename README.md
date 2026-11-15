@@ -21,8 +21,10 @@
 | Modelo de Análise (Casos de Uso + Histórias de Usuário) | ✅ |
 | Projeto Estrutural: projeto Spring Boot com classes, atributos e stubs | ✅ |
 | Projeto Estrutural: Diagrama de Classes (Lucidchart) | ✅ |
-| Autenticação | ⏳ |
-| Protótipo (React + Vite + MongoDB Atlas) | ⏳ |
+| Autenticação (login com senha, JWT) | ✅ |
+| Protótipo: back-end (regras de negócio + API REST) | ✅ |
+| Protótipo: front-end (React + Vite) | ⏳ |
+| Persistência no MongoDB Atlas | ⏳ |
 | Correção dos diagramas | ⏳ |
 
 ---
