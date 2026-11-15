@@ -28,7 +28,9 @@ public class NotificacaoCobranca {
     @DBRef
     private List<Matricula> matriculas = new ArrayList<>();
 
+    /** Envio simulado: o sistema de cobranças é externo e não faz parte deste protótipo. */
     public void enviar() {
-        throw new UnsupportedOperationException("Não implementado");
+        this.enviada = true;
+        this.dataEnvio = LocalDateTime.now();
     }
 }

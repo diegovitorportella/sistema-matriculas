@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -29,16 +30,20 @@ public class Disciplina {
     @DBRef
     private Professor professor;
 
+    /** Total de matrículas ativas no período corrente; preenchido pelo serviço antes de consultar as regras. */
+    @Transient
+    private int matriculadosAtivos;
+
     public int totalMatriculados() {
-        throw new UnsupportedOperationException("Não implementado");
+        return matriculadosAtivos;
     }
 
     public boolean temVaga() {
-        throw new UnsupportedOperationException("Não implementado");
+        return totalMatriculados() < maxAlunos;
     }
 
     /** Ao fim do período: ATIVA se total >= minAlunos, senão CANCELADA. */
     public void avaliarAtivacao() {
-        throw new UnsupportedOperationException("Não implementado");
+        status = totalMatriculados() >= minAlunos ? StatusDisciplina.ATIVA : StatusDisciplina.CANCELADA;
     }
 }

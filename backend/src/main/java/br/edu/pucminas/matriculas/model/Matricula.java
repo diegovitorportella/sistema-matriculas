@@ -32,6 +32,6 @@ public class Matricula {
     private PeriodoMatricula periodo;
 
     public void cancelar() {
-        throw new UnsupportedOperationException("Não implementado");
+        this.status = StatusMatricula.CANCELADA;
     }
 }

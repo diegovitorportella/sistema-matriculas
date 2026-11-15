@@ -19,7 +19,12 @@ public class PeriodoMatricula {
     private LocalDate inicio;
     private LocalDate fim;
 
+    private boolean encerrado;
+
+    /** Aberto = não encerrado manualmente e a data de hoje está entre início e fim (inclusive). */
     public boolean estaAberto() {
-        throw new UnsupportedOperationException("Não implementado");
+        LocalDate hoje = LocalDate.now();
+        return !encerrado && inicio != null && fim != null
+                && !hoje.isBefore(inicio) && !hoje.isAfter(fim);
     }
 }

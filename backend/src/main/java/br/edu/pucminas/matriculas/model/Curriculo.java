@@ -26,6 +26,9 @@ public class Curriculo {
     private PeriodoMatricula periodoMatricula;
 
     public void adicionarDisciplina(Disciplina disciplina) {
-        throw new UnsupportedOperationException("Não implementado");
+        boolean jaExiste = disciplinas.stream().anyMatch(d -> d.getId().equals(disciplina.getId()));
+        if (!jaExiste) {
+            disciplinas.add(disciplina);
+        }
     }
 }
