@@ -1,0 +1,22 @@
+# Blueprint da Render para o back-end (Spring Boot em Docker).
+# O front-end vai na Vercel. Segredos (MONGODB_URI e CORS_ORIGENS) sao preenchidos no painel.
+services:
+  - type: web
+    name: matriculas-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    region: ohio
+    plan: free
+    autoDeployTrigger: commit
+    envVars:
+      - key: MONGODB_URI
+        sync: false # mongodb+srv://USUARIO:SENHA@CLUSTER.mongodb.net/matriculas?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGENS
+        sync: false # URL do front-end na Vercel, ex.: https://sistema-matriculas.vercel.app
+      - key: SEED_SENHA
+        generateValue: true # senha da secretaria "secretaria" (nao usada na demo)
+      - key: DEMO_ENABLED
+        value: "true"

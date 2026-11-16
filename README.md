@@ -281,6 +281,24 @@ Todos os dados são fictícios. Não use o modo demonstração em um sistema rea
 | Aluno | `GET /api/disciplinas/ofertadas`, `POST /api/matriculas`, `DELETE /api/matriculas/{id}`, `GET /api/matriculas/minhas` |
 | Professor | `GET /api/professores/me/disciplinas`, `GET /api/professores/me/disciplinas/{id}/alunos` |
 
+### Publicação (demonstração online)
+
+| Camada | Serviço | Configuração |
+| :--- | :--- | :--- |
+| Banco | MongoDB Atlas (M0 gratuito) | usuário de banco e acesso de rede liberado |
+| Back-end | Render (Docker, região Ohio) | [render.yaml](render.yaml) e [backend/Dockerfile](backend/Dockerfile) |
+| Front-end | Vercel | pasta raiz `frontend`, com [vercel.json](frontend/vercel.json) |
+
+**Back-end (Render):** crie um Blueprint a partir do repositório. Preencha `MONGODB_URI` e `CORS_ORIGENS` (URL da Vercel). `JWT_SECRET` é gerado pela Render e `DEMO_ENABLED` já vem como `true`.
+
+**Front-end (Vercel):** defina `VITE_API_URL` com a URL pública da API terminada em `/api` (por exemplo `https://matriculas-api.onrender.com/api`) e `VITE_MODO_DEMO=true`.
+
+Observações:
+
+- No plano gratuito a Render hiberna o serviço após alguns minutos sem uso. A primeira requisição pode levar cerca de um minuto.
+- Na primeira inicialização o seeder cria os dados de demonstração, o que leva alguns minutos por causa da latência até o Atlas. Nas inicializações seguintes ele detecta que os dados já existem e não faz nada.
+- Para restaurar a demonstração depois de mudanças dos visitantes, apague o banco `matriculas` no Atlas e reinicie o serviço.
+
 ### Testes
 
 ```bash
