@@ -1,19 +1,24 @@
-import { normalizar } from '../util'
-
 /**
- * A API não tem "área acadêmica". A fotografia de cada disciplina é escolhida
- * por palavras-chave do nome (apresentação visual); sem correspondência, usa
- * uma foto estável derivada do código.
+ * A API não tem "área acadêmica" nem imagem por disciplina. A fotografia de cada
+ * disciplina é só apresentação: gira entre as fotos disponíveis a partir do número
+ * do código (ES101, ES102, ...), de modo que disciplinas consecutivas recebem fotos
+ * diferentes e a mesma disciplina mantém a mesma foto em todas as telas.
+ * A ordem abaixo alterna ambientes (edifício, biblioteca, praça) para que cartões
+ * vizinhos no catálogo não se pareçam.
  */
-const REGRAS = [
-  ['engenharia', ['engenharia', 'circuito', 'mecanic', 'eletric', 'eletron', 'materiais', 'termodin']],
-  ['tecnologia', ['program', 'algoritm', 'software', 'computa', 'dados', 'redes', 'web', 'inteligencia', 'digital', 'informatic', 'sistemas']],
-  ['ciencias', ['calculo', 'fisica', 'quimica', 'biolog', 'matematic', 'estatistic', 'algebra', 'geometr', 'ciencia']],
-  ['administracao', ['gestao', 'administr', 'econom', 'contab', 'financ', 'marketing', 'empreend', 'negocio', 'mercado', 'projetos']],
-  ['humanidades', ['etica', 'filosof', 'histor', 'sociolog', 'comunic', 'direito', 'portugues', 'redacao', 'ingles', 'humana', 'psicolog', 'arte']],
+const FOTOS = [
+  'biblioteca',
+  'engenharia',
+  'campus',
+  'humanidades',
+  'tecnologia',
+  'login',
+  'ciencias',
+  'administracao',
+  'geral',
+  'professor',
+  'secretaria',
 ]
-
-const SEM_AREA = ['geral', 'humanidades', 'ciencias', 'engenharia', 'tecnologia', 'administracao']
 
 function hash(texto) {
   let h = 0
@@ -22,9 +27,8 @@ function hash(texto) {
 }
 
 export function fotoDaDisciplina(disciplina) {
-  const texto = normalizar(`${disciplina.nome ?? ''} ${disciplina.codigo ?? ''}`)
-  for (const [foto, palavras] of REGRAS) {
-    if (palavras.some((p) => texto.includes(p))) return foto
-  }
-  return SEM_AREA[hash(disciplina.codigo || disciplina.id || '') % SEM_AREA.length]
+  const codigo = String(disciplina.codigo || disciplina.id || '')
+  const numero = codigo.match(/(\d+)\s*$/)
+  const indice = numero ? Number(numero[1]) : hash(codigo)
+  return FOTOS[indice % FOTOS.length]
 }
