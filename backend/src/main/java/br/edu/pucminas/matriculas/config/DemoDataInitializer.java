@@ -101,6 +101,10 @@ public class DemoDataInitializer implements CommandLineRunner {
         d.add(disciplina("ES111", "Inteligência Artificial", 4, luciana));
         d.add(disciplina("ES112", "Computação Gráfica", 4, null));
 
+        // Como no cadastro normal (DisciplinaController), as disciplinas passam a compor o curso.
+        es.getDisciplinas().addAll(d);
+        cursos.save(es);
+
         List<String> ids = d.stream().map(Disciplina::getId).toList();
         LocalDate hoje = LocalDate.now();
         String semestre = hoje.getYear() + "/" + (hoje.getMonthValue() <= 6 ? 1 : 2);
