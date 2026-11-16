@@ -1,0 +1,90 @@
+{
+  "login": {
+    "arquivo": "/fotos/login.jpg",
+    "lugar": "Radcliffe Camera, University of Oxford",
+    "autor": "Julian Herzog (Website)",
+    "licenca": "CC BY 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Radcliffe_Camera_Oxford_2018_02.jpg"
+  },
+  "campus": {
+    "arquivo": "/fotos/campus.jpg",
+    "lugar": "Main Quad, Stanford University",
+    "autor": "King of Hearts",
+    "licenca": "CC BY-SA 3.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/3.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Stanford_University_Main_Quad_May_2011_001.jpg"
+  },
+  "secretaria": {
+    "arquivo": "/fotos/secretaria.jpg",
+    "lugar": "Nassau Hall, Princeton University",
+    "autor": "Daderot",
+    "licenca": "CC0",
+    "urlLicenca": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Nassau_Hall_-_Princeton_University_-_Princeton,_NJ_-_DSC00807.jpg"
+  },
+  "professor": {
+    "arquivo": "/fotos/professor.jpg",
+    "lugar": "Widener Library, Harvard University",
+    "autor": "Kenneth C. Zirkel",
+    "licenca": "CC BY 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Widener_Library,_Harvard_University.jpg"
+  },
+  "biblioteca": {
+    "arquivo": "/fotos/biblioteca.jpg",
+    "lugar": "Duke Humfrey's Library, Bodleian Library, University of Oxford",
+    "autor": "Diliff",
+    "licenca": "CC BY-SA 3.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/3.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Duke_Humfrey%27s_Library_Interior_5,_Bodleian_Library,_Oxford,_UK_-_Diliff.jpg"
+  },
+  "tecnologia": {
+    "arquivo": "/fotos/tecnologia.jpg",
+    "lugar": "Gates Computer Science Building, Stanford University",
+    "autor": "Frank Schulenburg",
+    "licenca": "CC BY-SA 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Gates_Computer_Science_Building_(2025)-L1007406.jpg"
+  },
+  "engenharia": {
+    "arquivo": "/fotos/engenharia.jpg",
+    "lugar": "Maclaurin Buildings, Massachusetts Institute of Technology",
+    "autor": "Beyond My Ken",
+    "licenca": "CC BY-SA 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:2017_Maclaurin_Buildings_(MIT_Building_10)_and_Great_Dome.jpg"
+  },
+  "administracao": {
+    "arquivo": "/fotos/administracao.jpg",
+    "lugar": "Baker Library, Harvard Business School",
+    "autor": "ajay_suresh",
+    "licenca": "CC BY 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Harvard_Business_School_-_Baker_Library_(54939977732).jpg"
+  },
+  "ciencias": {
+    "arquivo": "/fotos/ciencias.jpg",
+    "lugar": "Science Center, Harvard University",
+    "autor": "Rizka",
+    "licenca": "CC BY-SA 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Harvard_Science_Center_from_the_Yard.jpg"
+  },
+  "humanidades": {
+    "arquivo": "/fotos/humanidades.jpg",
+    "lugar": "Sterling Memorial Library, Yale University",
+    "autor": "Christian David",
+    "licenca": "CC BY-SA 4.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Sterling_Memorial_Library_seen_from_the_front,_Yale_University,_New_Haven,_Connecticut.jpg"
+  },
+  "geral": {
+    "arquivo": "/fotos/geral.jpg",
+    "lugar": "Harkness Tower, Yale University",
+    "autor": "ajay_suresh",
+    "licenca": "CC BY 2.0",
+    "urlLicenca": "https://creativecommons.org/licenses/by/2.0",
+    "fonte": "https://commons.wikimedia.org/wiki/File:Harkness_Tower_-_Yale_University_(54106458290).jpg"
+  }
+}
