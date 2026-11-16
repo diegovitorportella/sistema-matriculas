@@ -23,7 +23,8 @@
 | Projeto Estrutural: Diagrama de Classes (Lucidchart) | ✅ |
 | Autenticação (login com senha, JWT) | ✅ |
 | Protótipo: back-end (regras de negócio + API REST) | ✅ |
-| Protótipo: front-end (React + Vite) | ⏳ |
+| Protótipo: front-end (React + Vite) | ✅ |
+| Redesign do front-end (identidade Horizon University) | ✅ |
 | Persistência no MongoDB Atlas | ⏳ |
 | Correção dos diagramas | ⏳ |
 
@@ -41,6 +42,7 @@
 - [Arquitetura e Diagrama de Classes](#-arquitetura-e-diagrama-de-classes)
 - [Instalação e Execução](#-instalação-e-execução)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
+- [Identidade Visual e créditos das fotografias](#-identidade-visual-horizon-university)
 - [Autores](#-autores)
 - [Licença](#-licença)
 
@@ -211,8 +213,82 @@ Arquitetura prevista: **API REST em camadas** (controller → service → reposi
 
 ## 🔧 Instalação e Execução
 
-<!-- TODO: preencher quando o projeto estiver implementado (variáveis de ambiente, back-end, front-end) -->
-_Em construção._
+### Pré-requisitos
+
+- Java JDK 25 e Maven (o projeto traz o wrapper `mvnw`)
+- Node.js 22 ou superior
+- Um MongoDB: cluster no **MongoDB Atlas** ou, para desenvolvimento, `docker run -d --name mongo-dev -p 27017:27017 mongo:7`
+
+### Variáveis de ambiente (back-end)
+
+| Variável | Descrição | Padrão (somente desenvolvimento) |
+| :--- | :--- | :--- |
+| `MONGODB_URI` | URI de conexão do MongoDB (Atlas: `mongodb+srv://...`) | `mongodb://localhost:27017/matriculas` |
+| `JWT_SECRET` | Chave de assinatura dos tokens, mínimo de 32 caracteres | valor fixo de desenvolvimento |
+| `SEED_LOGIN` / `SEED_SENHA` | Secretaria criada no primeiro acesso, se não existir | `secretaria` / `secretaria123` |
+| `SERVER_PORT` | Porta da API | `8080` |
+| `CORS_ORIGENS` | Origens permitidas (front-end) | `http://localhost:5173` |
+| `DEMO_ENABLED` | Cria dados fictícios de demonstração se o banco ainda não os tiver | `false` |
+| `DEMO_SENHA` | Senha das contas de demonstração | `demo12345` |
+
+Nunca versione credenciais. Use [backend/.env.example](backend/.env.example) como referência.
+
+### Como executar
+
+Em dois terminais:
+
+```bash
+# Terminal 1: back-end (http://localhost:8080)
+cd backend
+./mvnw spring-boot:run
+
+# Terminal 2: front-end (http://localhost:5173)
+cd frontend
+npm install
+npm run dev
+```
+
+Em desenvolvimento, o Vite repassa `/api` para o back-end (`BACKEND_URL`, padrão `http://localhost:8080`). Para outro endereço em produção, defina `VITE_API_URL` antes do `npm run build`.
+
+### Primeiro acesso
+
+1. Entre como secretaria com o usuário e a senha de `SEED_LOGIN` e `SEED_SENHA`.
+2. Cadastre curso, professores, alunos e disciplinas.
+3. Em **Semestre**, gere o currículo e abra o período de matrículas.
+4. Entre como aluno para se matricular e como professor para ver as turmas.
+5. Ao fim do período, a secretaria o encerra e o sistema ativa ou cancela cada disciplina.
+
+### Modo demonstração (portfólio)
+
+Para explorar o portal sem cadastrar nada, inicie o back-end com `DEMO_ENABLED=true`. Se o banco ainda não tiver as contas demo, o sistema cria 3 cursos, 5 professores, 12 disciplinas, 14 alunos, um currículo, um período de matrículas aberto (datas relativas a hoje) e matrículas feitas pelas mesmas regras de negócio da aplicação (limites 4 + 2, cobrança simulada). Algumas disciplinas ficam com 3 ou mais alunos e outras com menos, então o encerramento do período mostra os dois resultados.
+
+No front-end, `VITE_MODO_DEMO=true` exibe na tela de login os botões de acesso rápido.
+
+| Perfil | Usuário | Senha |
+| :--- | :--- | :--- |
+| Aluno | `demo.aluno` | `demo12345` |
+| Professor | `demo.professor` | `demo12345` |
+| Secretaria | `demo.secretaria` | `demo12345` |
+
+Todos os dados são fictícios. Não use o modo demonstração em um sistema real.
+
+### API REST (resumo)
+
+| Perfil | Endpoints |
+| :--- | :--- |
+| Todos | `POST /api/auth/login`, `GET /api/auth/me` |
+| Secretaria | CRUD em `/api/cursos`, `/api/disciplinas`, `/api/professores`, `/api/alunos`; `POST /api/curriculos`; `POST /api/periodos`; `POST /api/periodos/{id}/encerrar` |
+| Aluno | `GET /api/disciplinas/ofertadas`, `POST /api/matriculas`, `DELETE /api/matriculas/{id}`, `GET /api/matriculas/minhas` |
+| Professor | `GET /api/professores/me/disciplinas`, `GET /api/professores/me/disciplinas/{id}/alunos` |
+
+### Testes
+
+```bash
+cd backend
+./mvnw test -Dtest='UsuarioTest,RegrasDominioTest'
+```
+
+`MatriculasApplicationTests` sobe o contexto completo e exige um MongoDB acessível.
 
 ---
 
@@ -223,9 +299,40 @@ _Em construção._
 ├── README.md
 ├── /docs
 │   └── /diagramas      # Diagramas UML (casos de uso, classes) — todas as versões
-├── /backend            # Spring Boot (a criar)
-└── /frontend           # React + Vite (a criar)
+├── /backend            # Spring Boot: model, repository, service, controller, security
+└── /frontend           # React + Vite
+    ├── /public/fotos   # Fotografias (Wikimedia Commons) com licença livre
+    └── /src            # components, contexts, pages, services, styles, data
 ```
+
+---
+
+## 🎨 Identidade Visual: Horizon University
+
+O front-end usa a identidade de uma universidade fictícia, a **Horizon University** (Belo Horizonte, Brazil; lema *Veritas · Scientia · Progressus*), inspirada nas universidades tradicionais americanas: bordô institucional, creme, ouro envelhecido e grafite, com títulos em serifa (Newsreader) e interface em sans-serif (Hanken Grotesk). O brasão é um desenho original (`frontend/src/components/Brasao.jsx`).
+
+- **Aluno:** início, catálogo de disciplinas, plano de matrícula (4 de primeira opção e 2 alternativas, com revisão e confirmação), minhas matrículas e perfil.
+- **Professor:** início, minhas disciplinas, detalhe da turma com lista de alunos (busca e exportação CSV) e perfil.
+- **Secretaria:** início, currículo semestral, períodos de matrícula, disciplinas, cursos, alunos, professores e relatórios.
+- Todas as telas usam os endpoints reais do back-end (camada de serviços em `frontend/src/services`). Avisos do sino, busca do cabeçalho e relatórios são calculados no cliente com dados reais da API.
+
+### Créditos das fotografias
+
+As fotografias são reais, de campi e bibliotecas de universidades internacionais, usadas como **referência visual** e armazenadas em `frontend/public/fotos`. Elas **não representam instalações da Horizon University**, que é fictícia. Todas têm licença livre (CC0, CC BY ou CC BY-SA) e o aplicativo mostra a legenda de cada imagem e a lista completa em "Créditos das fotografias".
+
+| Local | Autor | Licença | Fonte |
+| :--- | :--- | :--- | :--- |
+| Radcliffe Camera, University of Oxford | Julian Herzog (Website) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Radcliffe_Camera_Oxford_2018_02.jpg) |
+| Main Quad, Stanford University | King of Hearts | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Stanford_University_Main_Quad_May_2011_001.jpg) |
+| Nassau Hall, Princeton University | Daderot | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Nassau_Hall_-_Princeton_University_-_Princeton,_NJ_-_DSC00807.jpg) |
+| Widener Library, Harvard University | Kenneth C. Zirkel | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Widener_Library,_Harvard_University.jpg) |
+| Duke Humfrey's Library, Bodleian Library, University of Oxford | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Duke_Humfrey%27s_Library_Interior_5,_Bodleian_Library,_Oxford,_UK_-_Diliff.jpg) |
+| Gates Computer Science Building, Stanford University | Frank Schulenburg | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gates_Computer_Science_Building_(2025)-L1007406.jpg) |
+| Maclaurin Buildings, Massachusetts Institute of Technology | Beyond My Ken | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2017_Maclaurin_Buildings_(MIT_Building_10)_and_Great_Dome.jpg) |
+| Baker Library, Harvard Business School | ajay_suresh | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Harvard_Business_School_-_Baker_Library_(54939977732).jpg) |
+| Science Center, Harvard University | Rizka | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Harvard_Science_Center_from_the_Yard.jpg) |
+| Sterling Memorial Library, Yale University | Christian David | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sterling_Memorial_Library_seen_from_the_front,_Yale_University,_New_Haven,_Connecticut.jpg) |
+| Harkness Tower, Yale University | ajay_suresh | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Harkness_Tower_-_Yale_University_(54106458290).jpg) |
 
 ---
 
