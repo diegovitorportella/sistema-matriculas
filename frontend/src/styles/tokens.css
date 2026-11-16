@@ -1,0 +1,80 @@
+/* ------------------------------------------------------------------
+   Horizon University: tokens do design system.
+   Bordô institucional, creme de papel, ouro envelhecido e grafite.
+   ------------------------------------------------------------------ */
+:root {
+  /* Bordô */
+  --bordo-950: #3e0b16;
+  --bordo-900: #521220;
+  --bordo-800: #661628;
+  --bordo-700: #7d1a2f;
+  --bordo-600: #8e1b2e;
+  --bordo-100: #f1dadd;
+  --bordo-50: #f8edef;
+
+  /* Creme e papel */
+  --creme-50: #fdfbf6;
+  --creme-100: #f7f2e8;
+  --creme-200: #eee6d5;
+  --creme-300: #e2d8c2;
+  --creme-400: #cdbfa3;
+
+  /* Ouro envelhecido */
+  --ouro-700: #6f5521;
+  --ouro-500: #a98a4b;
+  --ouro-300: #d2be88;
+  --ouro-100: #f1e8cd;
+
+  /* Grafite */
+  --grafite-900: #1f2124;
+  --grafite-700: #3a3d42;
+  --grafite-500: #5e6268;
+  --grafite-300: #9a9da2;
+
+  /* Estados */
+  --verde-700: #2f5740;
+  --verde-600: #3e6b4e;
+  --verde-100: #dfece3;
+  --ambar-700: #8a5a0b;
+  --ambar-100: #f6e7c6;
+  --erro-700: #9b1c1c;
+  --erro-100: #f7dedc;
+
+  /* Papéis semânticos */
+  --fundo: var(--creme-100);
+  --papel: var(--creme-50);
+  --texto: var(--grafite-900);
+  --texto-suave: var(--grafite-500);
+  --linha: var(--creme-300);
+  --linha-forte: var(--creme-400);
+  --acao: var(--bordo-600);
+  --acao-hover: var(--bordo-800);
+  --foco: var(--bordo-600);
+
+  /* Tipografia */
+  --fonte-serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --fonte-sans: 'Hanken Grotesk', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Escala de espaços */
+  --e1: 0.25rem;
+  --e2: 0.5rem;
+  --e3: 0.75rem;
+  --e4: 1rem;
+  --e5: 1.5rem;
+  --e6: 2rem;
+  --e7: 3rem;
+  --e8: 4.5rem;
+
+  /* Formas: raios pequenos, tom institucional */
+  --raio-1: 2px;
+  --raio-2: 4px;
+  --raio-3: 8px;
+  --sombra-flutuante: 0 14px 40px rgba(31, 33, 36, 0.2);
+
+  /* Estrutura */
+  --larg-sidebar: 17rem;
+  --alt-header: 4.25rem;
+  --larg-conteudo: 80rem;
+
+  color-scheme: light;
+}
