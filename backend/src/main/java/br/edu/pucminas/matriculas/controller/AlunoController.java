@@ -43,7 +43,7 @@ public class AlunoController {
 
     @GetMapping
     public List<AlunoResponse> listar() {
-        return alunos.findAll().stream().map(AlunoResponse::de).toList();
+        return alunos.listarTodos().stream().map(AlunoResponse::de).toList();
     }
 
     @PostMapping
@@ -77,7 +77,7 @@ public class AlunoController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable String id) {
-        if (!alunos.existsById(id)) {
+        if (!alunos.existeComId(id)) {
             throw new NaoEncontradoException("Aluno não encontrado");
         }
         alunos.deleteById(id);

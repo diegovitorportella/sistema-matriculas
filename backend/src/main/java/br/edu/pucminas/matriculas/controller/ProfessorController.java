@@ -58,7 +58,7 @@ public class ProfessorController {
     @GetMapping
     @PreAuthorize("hasRole('SECRETARIA')")
     public List<ProfessorResponse> listar() {
-        return professores.findAll().stream().map(ProfessorResponse::de).toList();
+        return professores.listarTodos().stream().map(ProfessorResponse::de).toList();
     }
 
     @PostMapping
@@ -97,7 +97,7 @@ public class ProfessorController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('SECRETARIA')")
     public void remover(@PathVariable String id) {
-        if (!professores.existsById(id)) {
+        if (!professores.existeComId(id)) {
             throw new NaoEncontradoException("Professor não encontrado");
         }
         professores.deleteById(id);
