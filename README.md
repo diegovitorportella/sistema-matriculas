@@ -3,7 +3,12 @@
 > [!NOTE]
 > Sistema web para informatizar o processo de matrículas de uma universidade: a secretaria monta o currículo do semestre, os alunos se matriculam (ou cancelam) dentro do período de matrículas e os professores consultam seus alunos.
 
-<!-- TODO: inserir logo do projeto -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="frontend/public/brasao-claro.webp">
+    <img src="frontend/public/brasao.webp" alt="Brasão da Horizon University" width="150">
+  </picture>
+</p>
 
 ---
 
@@ -53,6 +58,7 @@ Na tela de login, os botões **Entrar como aluno / professor / secretaria** abre
 
 ## 📚 Índice
 - [Demonstração Online](#-demonstração-online)
+- [Links Úteis](#-links-úteis)
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Funcionalidades Principais](#-funcionalidades-principais)
 - [Telas do Sistema](#-telas-do-sistema)
@@ -67,8 +73,22 @@ Na tela de login, os botões **Entrar como aluno / professor / secretaria** abre
 - [Instalação e Execução](#-instalação-e-execução)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
 - [Identidade Visual e créditos das fotografias](#-identidade-visual-horizon-university)
+- [Documentações utilizadas](#-documentações-utilizadas)
 - [Autores](#-autores)
+- [Contribuição](#-contribuição)
+- [Agradecimentos](#-agradecimentos)
 - [Licença](#-licença)
+
+---
+
+## 🔗 Links Úteis
+
+| Recurso | Link |
+| :--- | :--- |
+| 🌐 Demonstração online | https://sistema-matriculas-inky.vercel.app |
+| 📦 Repositório | https://github.com/diegovitorportella/sistema-matriculas |
+| 🗺️ Diagramas UML | [docs/diagramas](docs/diagramas) |
+| 📋 Histórias de usuário | [Histórias de Usuário](#histórias-de-usuário) |
 
 ---
 
@@ -162,6 +182,9 @@ Capturas da demonstração online. O portal usa a identidade fictícia **Horizon
 | RN06 | O máximo é de **60 alunos** por disciplina; ao atingi-lo, as matrículas dessa disciplina são encerradas. |
 | RN07 | Após o aluno se inscrever no semestre, o **sistema de cobranças é notificado**. |
 | RN08 | O professor só visualiza os alunos das disciplinas em que leciona. |
+
+> [!NOTE]
+> O encerramento do período (RN05) é uma ação da secretaria (botão **Encerrar período**): é nesse momento que cada disciplina do currículo é confirmada ou cancelada. Depois da data final, o período deixa de aceitar matrículas, mas a consolidação só ocorre quando a secretaria o encerra.
 
 ### Histórias de Usuário
 
@@ -434,11 +457,37 @@ As fotografias são reais, de campi e bibliotecas de universidades internacionai
 
 ---
 
+## 🔗 Documentações utilizadas
+
+- [Spring Boot](https://docs.spring.io/spring-boot/index.html)
+- [Spring Data MongoDB](https://docs.spring.io/spring-data/mongodb/reference/)
+- [Spring Security](https://docs.spring.io/spring-security/reference/)
+- [MongoDB Atlas](https://www.mongodb.com/docs/atlas/)
+- [React](https://react.dev)
+- [Vite](https://vite.dev)
+- [Render](https://render.com/docs) e [Vercel](https://vercel.com/docs)
+- Fotografias: [Wikimedia Commons](https://commons.wikimedia.org) (autores e licenças na seção de créditos)
+
+---
+
 ## 👥 Autores
 
 | 👤 Nome | :octocat: GitHub |
 |---------|-----------------|
-| Diego | _link_ |
+| Diego Portella | [@diegovitorportella](https://github.com/diegovitorportella) |
+
+---
+
+## 🤝 Contribuição
+
+Projeto acadêmico, sem previsão de novas funcionalidades. Sugestões e correções são bem-vindas: abra uma issue ou faça um fork, crie uma branch (`git switch -c minha-melhoria`) e envie um pull request descrevendo a mudança.
+
+---
+
+## 🙏 Agradecimentos
+
+- Prof. João Paulo Carneiro Aramuni (PUC Minas), pelo enunciado e pela orientação da disciplina DIAW.
+- Autores das fotografias de universidades publicadas no Wikimedia Commons sob licenças livres.
 
 ---
 
