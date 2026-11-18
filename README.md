@@ -27,7 +27,7 @@
 | Redesign do front-end (identidade Horizon University) | ✅ |
 | Persistência no MongoDB Atlas | ✅ |
 | Publicação online (Vercel + Render + Atlas) | ✅ |
-| Correção dos diagramas | ⏳ |
+| Correção dos diagramas | ✅ |
 
 ---
 
@@ -62,7 +62,7 @@ Na tela de login, os botões **Entrar como aluno / professor / secretaria** abre
   - [Diagrama de Casos de Uso](#diagrama-de-casos-de-uso)
   - [Regras de Negócio](#regras-de-negócio)
   - [Histórias de Usuário](#histórias-de-usuário)
-- [Arquitetura e Diagrama de Classes](#-arquitetura-e-diagrama-de-classes)
+- [Arquitetura e Diagramas](#-arquitetura-e-diagrama-de-classes)
 - [Do Modelo Inicial ao Protótipo Final](#-do-modelo-inicial-ao-protótipo-final)
 - [Instalação e Execução](#-instalação-e-execução)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
@@ -251,9 +251,24 @@ Capturas da demonstração online. O portal usa a identidade fictícia **Horizon
 
 ![Diagrama de Classes](docs/diagramas/classes.png)
 
-As classes do pacote `model` do back-end seguem este diagrama (atributos e assinaturas dos métodos); as associações são persistidas com `@DBRef` no MongoDB.
+As classes do pacote `model` do back-end seguem este diagrama (atributos e assinaturas dos métodos); as associações são persistidas com `@DBRef` no MongoDB. Os métodos de `Aluno`, `Professor` e `Secretaria` são stubs de modelagem: a lógica está em `MatriculaService` e `PeriodoService`.
 
-Arquitetura prevista: **API REST em camadas** (controller → service → repository) com Spring Boot, front-end SPA em React + Vite e persistência em MongoDB Atlas.
+### Diagrama de Arquitetura
+
+![Diagrama de Arquitetura](docs/diagramas/arquitetura.png)
+
+**API REST em camadas** (segurança → controllers → serviços → repositórios) com Spring Boot, front-end SPA em React + Vite e persistência em MongoDB Atlas. A autenticação usa JWT (HS256) e as senhas são armazenadas com BCrypt. O sistema de cobranças é externo e tem a notificação simulada.
+
+### Versões dos diagramas
+
+| Arquivo | Versão | Descrição |
+| :--- | :---: | :--- |
+| [casos-de-uso.png](docs/diagramas/casos-de-uso.png) | v1 | Diagrama de casos de uso (modelo de análise) |
+| [classes-v1.png](docs/diagramas/classes-v1.png) | v1 | Diagrama de classes inicial, antes da implementação |
+| [classes.png](docs/diagramas/classes.png) | v2 | Diagrama de classes atualizado com o código final (`encerrado`, `matriculadosAtivos`, `perfil()`, tipos `LocalDate` e `LocalDateTime`) |
+| [arquitetura.png](docs/diagramas/arquitetura.png) | v1 | Arquitetura em camadas e implantação (Vercel, Render, MongoDB Atlas) |
+
+As diferenças entre o modelo inicial e o protótipo estão na próxima seção.
 
 ---
 
