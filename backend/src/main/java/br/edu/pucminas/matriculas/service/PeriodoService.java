@@ -16,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PeriodoService {
+
+    private static final Logger log = LoggerFactory.getLogger(PeriodoService.class);
 
     private final PeriodoMatriculaRepository periodos;
     private final CurriculoRepository curriculos;
@@ -95,5 +99,27 @@ public class PeriodoService {
                     (int) total, d.getStatus()));
         }
         return resultado;
+    }
+
+    /**
+     * Encerra, aplicando a mesma consolidação de {@link #encerrar(String)}, os períodos cuja data final já passou
+     * e que a secretaria ainda não encerrou. Retorna quantos períodos foram encerrados.
+     */
+    public int encerrarVencidos() {
+        LocalDate hoje = LocalDate.now();
+        int total = 0;
+        for (PeriodoMatricula p : periodos.findAll()) {
+            if (p.isEncerrado() || p.getFim() == null || !hoje.isAfter(p.getFim())) {
+                continue;
+            }
+            try {
+                encerrar(p.getId());
+                total++;
+                log.info("Período {} encerrado automaticamente após o fim em {}", p.getSemestre(), p.getFim());
+            } catch (RuntimeException e) {
+                log.warn("Não foi possível encerrar automaticamente o período {}: {}", p.getSemestre(), e.getMessage());
+            }
+        }
+        return total;
     }
 }
