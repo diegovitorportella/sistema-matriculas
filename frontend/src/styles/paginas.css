@@ -159,22 +159,17 @@
 
 .entrada__marca {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--e4);
   text-shadow: 0 1px 8px rgba(31, 8, 14, 0.75);
 }
 
-.entrada__universidade {
-  font-family: var(--fonte-serif);
-  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem);
-  font-weight: 600;
-  line-height: 1.05;
-}
 
 .entrada__local {
-  margin-top: 0.25rem;
-  color: var(--ouro-300);
-  font-size: 0.9rem;
+  margin: 0;
+  color: var(--creme-50);
+  font-size: 0.95rem;
   letter-spacing: 0.03em;
 }
 

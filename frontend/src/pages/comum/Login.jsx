@@ -42,11 +42,8 @@ export default function Login() {
         <Foto id="login" posicao="48% center" className="entrada__imagem" carregamento="eager" />
         <div className="entrada__veu" aria-hidden="true" />
         <div className="entrada__marca">
-          <Brasao tamanho={64} />
-          <div>
-            <p className="entrada__universidade">Horizon University</p>
-            <p className="entrada__local">Belo Horizonte, Brazil</p>
-          </div>
+          <Brasao tamanho={168} sobreEscuro />
+          <p className="entrada__local">Belo Horizonte, Brazil</p>
         </div>
         <div className="entrada__rodape-foto">
           <p className="entrada__lema">Veritas · Scientia · Progressus</p>
@@ -57,7 +54,7 @@ export default function Login() {
       <section className="entrada__painel">
         <form className="entrada__form" onSubmit={enviar} noValidate>
           <div className="entrada__cabecalho">
-            <Brasao tamanho={40} className="entrada__brasao-pequeno" />
+            <Brasao tamanho={64} className="entrada__brasao-pequeno" />
             <h1>Portal acadêmico</h1>
             <p className="entrada__texto">Entre com o usuário e a senha fornecidos pela secretaria.</p>
           </div>
