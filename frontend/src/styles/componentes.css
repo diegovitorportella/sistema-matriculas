@@ -391,6 +391,23 @@
   border-left: 1px solid var(--linha);
 }
 
+/* Celular: duas colunas fixas, com a divisória só entre elas */
+@media (max-width: 40rem) {
+  .estatisticas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--e5);
+  }
+
+  .estatistica {
+    padding: var(--e2) var(--e4);
+  }
+
+  .estatistica:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
 .estatistica__valor {
   order: 1;
   margin: 0;

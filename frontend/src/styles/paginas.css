@@ -21,8 +21,7 @@
   margin-top: var(--e6);
 }
 
-.pagina-corpo > .secao,
-.duas-colunas > .secao {
+.pagina-corpo > .secao {
   margin-top: 0;
 }
 
@@ -30,10 +29,24 @@
   margin-top: 0;
 }
 
+/* Pares de blocos lado a lado: cada um num painel próprio, para que não se misturem */
 .duas-colunas {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--e7) var(--e8);
+  gap: var(--e6);
+}
+
+.duas-colunas > .secao {
+  margin-top: 0;
+  padding: var(--e6);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-3);
+}
+
+/* Fileiras de painéis seguidas ficam a --e6 uma da outra, o mesmo espaço que separa as colunas */
+.pagina-corpo > .duas-colunas + .duas-colunas {
+  margin-top: calc(var(--e6) - var(--e7));
 }
 
 .espaco-topo {
@@ -91,12 +104,14 @@
 
 .lista-simples__direita {
   display: flex;
+  flex: none;
   align-items: center;
   gap: var(--e3);
 }
 
 .lista-simples small {
   color: var(--texto-suave);
+  white-space: nowrap;
 }
 
 .hero__selos {
@@ -809,6 +824,10 @@
   .duas-colunas,
   .perfil {
     grid-template-columns: 1fr;
+  }
+
+  .duas-colunas > .secao {
+    padding: var(--e5);
   }
 
   .perfil__foto {
