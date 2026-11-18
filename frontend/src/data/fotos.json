@@ -1,11 +1,11 @@
 {
   "login": {
     "arquivo": "/fotos/login.jpg",
-    "lugar": "Radcliffe Camera, University of Oxford",
-    "autor": "Julian Herzog (Website)",
+    "lugar": "Widener Library, Harvard University",
+    "autor": "Kenneth C. Zirkel",
     "licenca": "CC BY 4.0",
     "urlLicenca": "https://creativecommons.org/licenses/by/4.0",
-    "fonte": "https://commons.wikimedia.org/wiki/File:Radcliffe_Camera_Oxford_2018_02.jpg"
+    "fonte": "https://commons.wikimedia.org/wiki/File:Widener_Library,_Harvard_University.jpg"
   },
   "campus": {
     "arquivo": "/fotos/campus.jpg",
@@ -25,11 +25,11 @@
   },
   "professor": {
     "arquivo": "/fotos/professor.jpg",
-    "lugar": "Widener Library, Harvard University",
-    "autor": "Kenneth C. Zirkel",
+    "lugar": "Radcliffe Camera, University of Oxford",
+    "autor": "Julian Herzog (Website)",
     "licenca": "CC BY 4.0",
     "urlLicenca": "https://creativecommons.org/licenses/by/4.0",
-    "fonte": "https://commons.wikimedia.org/wiki/File:Widener_Library,_Harvard_University.jpg"
+    "fonte": "https://commons.wikimedia.org/wiki/File:Radcliffe_Camera_Oxford_2018_02.jpg"
   },
   "biblioteca": {
     "arquivo": "/fotos/biblioteca.jpg",
