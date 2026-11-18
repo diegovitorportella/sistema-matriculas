@@ -184,7 +184,7 @@ Capturas da demonstração online. O portal usa a identidade fictícia **Horizon
 | RN08 | O professor só visualiza os alunos das disciplinas em que leciona. |
 
 > [!NOTE]
-> O encerramento do período (RN05) é uma ação da secretaria (botão **Encerrar período**): é nesse momento que cada disciplina do currículo é confirmada ou cancelada. Depois da data final, o período deixa de aceitar matrículas, mas a consolidação só ocorre quando a secretaria o encerra.
+> O encerramento do período (RN05) acontece de duas formas: automaticamente, depois da data final (uma tarefa agendada verifica a cada hora), ou antes, quando a secretaria clica em **Encerrar período**. Nos dois casos, cada disciplina do currículo é confirmada (3 alunos ou mais) ou cancelada.
 
 ### Histórias de Usuário
 
@@ -330,6 +330,7 @@ Também foram adicionados, fora do modelo: o endpoint público `GET /api/saude` 
 | `SEED_LOGIN` / `SEED_SENHA` | Secretaria criada no primeiro acesso, se não existir | `secretaria` / `secretaria123` |
 | `SERVER_PORT` | Porta da API | `8080` |
 | `CORS_ORIGENS` | Origens permitidas (front-end) | `http://localhost:5173` |
+| `PERIODO_ENCERRAMENTO_AUTOMATICO` | Encerra sozinho os períodos cuja data final já passou | `true` |
 | `DEMO_ENABLED` | Cria dados fictícios de demonstração se o banco ainda não os tiver | `false` |
 | `DEMO_SENHA` | Senha das contas de demonstração | `demo12345` |
 
