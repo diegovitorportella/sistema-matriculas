@@ -47,7 +47,7 @@ export default function Periodos() {
             <div className="confirmacao__topo">
               <div>
                 <h2>Resultado de {resultado.semestre}</h2>
-                <p>Inscritos por disciplina no momento do encerramento. A API informa esse total apenas nesta resposta.</p>
+                <p>Inscritos por disciplina no momento do encerramento. Este total só é exibido agora, ao fechar o período.</p>
               </div>
               <button type="button" className="btn btn--secundario btn--sm" onClick={() => setResultado(null)}>
                 Dispensar
@@ -152,10 +152,10 @@ export default function Periodos() {
           </ul>
         )}
 
-        <Secao id="limites" titulo="O que a API informa">
+        <Secao id="limites" titulo="Como acompanhar as turmas">
           <p className="secao__texto">
-            O sistema não oferece uma listagem de matrículas individuais para a secretaria. Para ver os alunos de uma disciplina, o professor responsável
-            consulta a própria turma; o total de inscritos de cada disciplina é informado quando o período é encerrado.
+            Os alunos de cada disciplina aparecem na turma do professor responsável. O total de inscritos por disciplina é mostrado aqui quando você
+            encerra o período, junto com o resultado: confirmada com 3 alunos ou mais, cancelada com menos.
           </p>
         </Secao>
       </Carga>
