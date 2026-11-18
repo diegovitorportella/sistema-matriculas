@@ -109,7 +109,8 @@ public class DemoDataInitializer implements CommandLineRunner {
         LocalDate hoje = LocalDate.now();
         String semestre = hoje.getYear() + "/" + (hoje.getMonthValue() <= 6 ? 1 : 2);
         periodos.gerarCurriculo(semestre, ids);
-        periodos.abrir(semestre, hoje.minusDays(5), hoje.plusDays(25));
+        // Período longo: a demonstração pública não pode "expirar" sozinha.
+        periodos.abrir(semestre, hoje.minusDays(5), hoje.plusYears(2));
 
         Aluno demo = aluno("Aluno Demonstração", "demo.aluno", "20260000", es);
         String[] nomes = { "Ana Beatriz Souza", "Bruno Carvalho Lima", "Camila Ferreira", "Daniel Ribeiro",
