@@ -9,7 +9,7 @@
 
 ## 🚧 Status do Projeto
 
-![Etapa](https://img.shields.io/badge/Etapa-Modelo_de_An%C3%A1lise-blue?style=for-the-badge)
+![Etapa](https://img.shields.io/badge/Etapa-Prot%C3%B3tipo_Funcional-blue?style=for-the-badge)
 ![Java](https://img.shields.io/badge/Java-25-007ec6?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.x-007ec6?style=for-the-badge&logo=springboot&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-Build-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white)
@@ -25,14 +25,37 @@
 | Protótipo: back-end (regras de negócio + API REST) | ✅ |
 | Protótipo: front-end (React + Vite) | ✅ |
 | Redesign do front-end (identidade Horizon University) | ✅ |
-| Persistência no MongoDB Atlas | ⏳ |
+| Persistência no MongoDB Atlas | ✅ |
+| Publicação online (Vercel + Render + Atlas) | ✅ |
 | Correção dos diagramas | ⏳ |
 
 ---
 
+## 🌐 Demonstração Online
+
+**Acesse: https://sistema-matriculas-inky.vercel.app**
+
+Na tela de login, os botões **Entrar como aluno / professor / secretaria** abrem o portal com dados fictícios já cadastrados (3 cursos, 5 professores, 12 disciplinas, 14 alunos e um período de matrículas aberto). Todas as contas de demonstração usam a senha `demo12345`:
+
+| Perfil | Usuário |
+| :--- | :--- |
+| Aluno | `demo.aluno` |
+| Professor | `demo.professor` |
+| Secretaria | `demo.secretaria` |
+
+> [!NOTE]
+> O back-end roda no plano gratuito da Render e o banco no MongoDB Atlas. Se o serviço estiver hibernado, a primeira requisição pode levar cerca de um minuto. Um monitor (UptimeRobot) consulta `GET /api/saude` a cada 5 minutos para mantê-lo acordado.
+
+> [!WARNING]
+> Os dados são fictícios e compartilhados por todos os visitantes. Ações como encerrar o período de matrículas alteram a demonstração para todos.
+
+---
+
 ## 📚 Índice
+- [Demonstração Online](#-demonstração-online)
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Funcionalidades Principais](#-funcionalidades-principais)
+- [Telas do Sistema](#-telas-do-sistema)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [Modelo de Análise](#-modelo-de-análise)
   - [Atores](#atores)
@@ -40,6 +63,7 @@
   - [Regras de Negócio](#regras-de-negócio)
   - [Histórias de Usuário](#histórias-de-usuário)
 - [Arquitetura e Diagrama de Classes](#-arquitetura-e-diagrama-de-classes)
+- [Do Modelo Inicial ao Protótipo Final](#-do-modelo-inicial-ao-protótipo-final)
 - [Instalação e Execução](#-instalação-e-execução)
 - [Estrutura de Pastas](#-estrutura-de-pastas)
 - [Identidade Visual e créditos das fotografias](#-identidade-visual-horizon-university)
@@ -72,6 +96,28 @@ Contexto: projeto acadêmico (Laboratório 03 — DIAW, Engenharia de Software, 
 - ✅ **Ativação de disciplinas:** ao fim do período, disciplinas com menos de 3 inscritos são canceladas; limite de 60 inscritos por disciplina.
 - 💳 **Integração com cobranças:** notificação ao sistema de cobranças após a matrícula.
 - 👨‍🏫 **Consulta de alunos por disciplina (professor).**
+
+---
+
+## 📸 Telas do Sistema
+
+Capturas da demonstração online. O portal usa a identidade fictícia **Horizon University**.
+
+| Login com acesso rápido à demonstração | Catálogo de disciplinas (aluno) |
+| :---: | :---: |
+| ![Login](docs/prints/01-login.jpg) | ![Catálogo](docs/prints/02-aluno-catalogo.jpg) |
+
+| Plano de matrícula: 4 de primeira opção + 2 alternativas | Minhas matrículas (aluno) |
+| :---: | :---: |
+| ![Plano de matrícula](docs/prints/03-aluno-plano.jpg) | ![Minhas matrículas](docs/prints/04-aluno-minhas-matriculas.jpg) |
+
+| Alunos matriculados na disciplina (professor) | Painel da secretaria |
+| :---: | :---: |
+| ![Turma do professor](docs/prints/05-professor-turma.jpg) | ![Painel da secretaria](docs/prints/06-secretaria-inicio.jpg) |
+
+| Período de matrículas (secretaria) | Relatórios (secretaria) |
+| :---: | :---: |
+| ![Período](docs/prints/07-secretaria-periodo.jpg) | ![Relatórios](docs/prints/08-secretaria-relatorios.jpg) |
 
 ---
 
@@ -211,6 +257,24 @@ Arquitetura prevista: **API REST em camadas** (controller → service → reposi
 
 ---
 
+## 🔄 Do Modelo Inicial ao Protótipo Final
+
+O diagrama de classes foi o ponto de partida do código. Durante a implementação, algumas decisões exigiram ajustes em relação ao modelo inicial:
+
+| Elemento | Modelo inicial | Protótipo final | Motivo |
+| :--- | :--- | :--- | :--- |
+| `PeriodoMatricula` | `inicio`, `fim`, `semestre` e `estaAberto()` | Inclui o atributo **`encerrado`**; `estaAberto()` só é verdadeiro se o período não foi encerrado e hoje está entre `inicio` e `fim` | A secretaria precisa encerrar o período manualmente, e a consolidação (ativar ou cancelar disciplinas) acontece nesse momento |
+| `Disciplina` | `totalMatriculados()`, `temVaga()`, `avaliarAtivacao()` | Inclui **`matriculadosAtivos`** (campo `@Transient`) preenchido pelo serviço | A contagem vem das matrículas ativas do período corrente, que ficam em outra coleção; o objeto de domínio só aplica a regra (mínimo de 3, máximo de 60) |
+| `Usuario` | `autenticar(senha)` | Inclui **`perfil()`**, derivado do tipo concreto | O token JWT precisa informar o papel (ALUNO, PROFESSOR ou SECRETARIA) para o controle de acesso |
+| Métodos de `Aluno`, `Professor` e `Secretaria` | `matricular`, `cancelarMatricula`, `consultarMatriculas`, `consultarAlunos`, `gerarCurriculo`, `abrirPeriodoMatriculas`, `encerrarPeriodoMatriculas` | Permanecem como **stubs** (`UnsupportedOperationException`); a lógica real está em `MatriculaService` e `PeriodoService` | Essas operações dependem de repositórios e de várias entidades; ficaram na camada de serviço (controller → service → repository), mantendo o modelo de domínio sem dependência de persistência |
+| Persistência de usuários | Três classes distintas | `Aluno`, `Professor` e `Secretaria` compartilham a coleção `usuarios` do MongoDB, diferenciadas pelo campo `_class` | Uma coleção única simplifica o login (busca por `login` entre todos os perfis); as listagens de alunos e professores filtram pelo tipo |
+| Sistema de cobranças | Notificação ao sistema externo | `NotificacaoCobranca` registrada e envio **simulado** (`enviar()`) | O sistema de cobranças é externo e não faz parte do protótipo |
+| Camada de apresentação | Não modelada | DTOs (`Dtos.java`), controllers REST por perfil e SPA em React | Detalhes de implementação que não alteram o domínio |
+
+Também foram adicionados, fora do modelo: o endpoint público `GET /api/saude` (monitoramento), o modo demonstração (`DEMO_ENABLED`) e o front-end com identidade visual própria.
+
+---
+
 ## 🔧 Instalação e Execução
 
 ### Pré-requisitos
@@ -277,6 +341,7 @@ Todos os dados são fictícios. Não use o modo demonstração em um sistema rea
 | Perfil | Endpoints |
 | :--- | :--- |
 | Todos | `POST /api/auth/login`, `GET /api/auth/me` |
+| Público | `GET /api/saude` (verificação de disponibilidade, sem dados) |
 | Secretaria | CRUD em `/api/cursos`, `/api/disciplinas`, `/api/professores`, `/api/alunos`; `POST /api/curriculos`; `POST /api/periodos`; `POST /api/periodos/{id}/encerrar` |
 | Aluno | `GET /api/disciplinas/ofertadas`, `POST /api/matriculas`, `DELETE /api/matriculas/{id}`, `GET /api/matriculas/minhas` |
 | Professor | `GET /api/professores/me/disciplinas`, `GET /api/professores/me/disciplinas/{id}/alunos` |
@@ -327,7 +392,7 @@ cd backend
 
 ## 🎨 Identidade Visual: Horizon University
 
-O front-end usa a identidade de uma universidade fictícia, a **Horizon University** (Belo Horizonte, Brazil; lema *Veritas · Scientia · Progressus*), inspirada nas universidades tradicionais americanas: bordô institucional, creme, ouro envelhecido e grafite, com títulos em serifa (Newsreader) e interface em sans-serif (Hanken Grotesk). O brasão é um desenho original (`frontend/src/components/Brasao.jsx`).
+O front-end usa a identidade de uma universidade fictícia, a **Horizon University** (Belo Horizonte, Brazil; lema *Veritas · Scientia · Progressus*), inspirada nas universidades tradicionais americanas: bordô institucional, creme, ouro envelhecido e grafite, com títulos em serifa (Newsreader) e interface em sans-serif (Hanken Grotesk). O brasão (`frontend/public/brasao.webp`, aplicado pelo componente `frontend/src/components/Brasao.jsx`) é a marca visual fictícia fornecida pelo autor do projeto; o brasão tem fundo transparente e, sobre fundos escuros, usa uma variante (`brasao-claro.webp`) em que o texto "UNIVERSITY", preto no original, fica creme.
 
 - **Aluno:** início, catálogo de disciplinas, plano de matrícula (4 de primeira opção e 2 alternativas, com revisão e confirmação), minhas matrículas e perfil.
 - **Professor:** início, minhas disciplinas, detalhe da turma com lista de alunos (busca e exportação CSV) e perfil.
