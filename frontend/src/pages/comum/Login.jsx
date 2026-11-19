@@ -42,7 +42,7 @@ export default function Login() {
         <Foto id="login" posicao="48% center" className="entrada__imagem" carregamento="eager" />
         <div className="entrada__veu" aria-hidden="true" />
         <div className="entrada__marca">
-          <Brasao tamanho={168} sobreEscuro />
+          <Brasao tamanho={168} completo sobreEscuro />
           <p className="entrada__local">Belo Horizonte, Brazil</p>
         </div>
         <div className="entrada__rodape-foto">

@@ -18,7 +18,7 @@ export default function Sidebar({ itens, aberto, onFechar }) {
   return (
     <aside className={`sidebar${aberto ? ' sidebar--aberta' : ''}`} aria-label="Menu institucional">
       <div className="sidebar__marca">
-        <Brasao tamanho={48} sobreEscuro />
+        <Brasao tamanho={44} sobreEscuro />
         <div>
           <p className="sidebar__nome">Horizon University</p>
           <p className="sidebar__local">Belo Horizonte, Brazil</p>
