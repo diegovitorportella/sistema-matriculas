@@ -10,10 +10,11 @@ import SeletorIdioma from '../../components/SeletorIdioma.jsx'
 
 const MODO_DEMO = import.meta.env.VITE_MODO_DEMO === 'true'
 const SENHA_DEMO = import.meta.env.VITE_SENHA_DEMO || 'demo12345'
+// Cada cartão mostra o papel e o que essa pessoa faz; `rotulo` é o nome acessível do botão.
 const ACESSOS_DEMO = [
-  { rotulo: 'Entrar como aluno', login: 'demo.aluno' },
-  { rotulo: 'Entrar como professor', login: 'demo.professor' },
-  { rotulo: 'Entrar como secretaria', login: 'demo.secretaria' },
+  { rotulo: 'Entrar como aluno', login: 'demo.aluno', papel: 'Aluno', descricao: 'Monta o plano e se matricula' },
+  { rotulo: 'Entrar como professor', login: 'demo.professor', papel: 'Professor', descricao: 'Consulta turmas e alunos' },
+  { rotulo: 'Entrar como secretaria', login: 'demo.secretaria', papel: 'Secretaria', descricao: 'Gere currículo e períodos' },
 ]
 
 export default function Login() {
@@ -22,6 +23,7 @@ export default function Login() {
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
+  const [demoAtiva, setDemoAtiva] = useState(null) // login da conta de demonstração em andamento
   const [creditos, setCreditos] = useState(false)
 
   if (usuario) return <Navigate to="/" replace />
@@ -30,11 +32,13 @@ export default function Login() {
     e.preventDefault()
     setErro('')
     setEnviando(true)
+    setDemoAtiva(credenciais?.login ?? null)
     try {
       await entrar(credenciais?.login ?? login.trim(), credenciais?.senha ?? senha)
     } catch (err) {
       setErro(err.message)
       setEnviando(false)
+      setDemoAtiva(null)
     }
   }
 
@@ -85,18 +89,28 @@ export default function Login() {
         </form>
 
         {MODO_DEMO && (
-          <div className="entrada__demo">
-            <p className="entrada__demo-titulo">{t('Explorar a demonstração')}</p>
-            <p className="entrada__demo-texto">{t('Contas de exemplo com dados fictícios já cadastrados.')}</p>
-            <div className="entrada__demo-acoes">
+          <section className="entrada__demo" aria-labelledby="demo-titulo">
+            <h2 id="demo-titulo" className="entrada__demo-titulo">
+              {t('Conhecer o sistema sem cadastro')}
+            </h2>
+            <p className="entrada__demo-texto">{t('Entre com uma conta de demonstração e explore à vontade.')}</p>
+            <div className="entrada__demo-cartoes">
               {ACESSOS_DEMO.map((a) => (
-                <button key={a.login} type="button" className="btn btn--secundario" disabled={enviando}
-                  onClick={(e) => enviar(e, { login: a.login, senha: SENHA_DEMO })}>
-                  {t(a.rotulo)}
+                <button
+                  key={a.login}
+                  type="button"
+                  className="demo-cartao"
+                  aria-label={t(a.rotulo)}
+                  disabled={enviando}
+                  aria-busy={demoAtiva === a.login}
+                  onClick={(e) => enviar(e, { login: a.login, senha: SENHA_DEMO })}
+                >
+                  <span className="demo-cartao__papel">{t(a.papel)}</span>
+                  <span className="demo-cartao__texto">{demoAtiva === a.login ? t('Entrando…') : t(a.descricao)}</span>
                 </button>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         <p className="entrada__creditos">

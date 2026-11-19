@@ -918,11 +918,96 @@
   }
 }
 
-/* Acesso rápido da demonstração (VITE_MODO_DEMO=true) */
-.entrada__demo { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--linha, #d9d2c3); width: 100%; max-width: 26rem; }
-.entrada__demo-titulo { font-family: var(--fonte-serif); font-size: 1.05rem; margin: 0 0 .15rem; }
-.entrada__demo-texto { margin: 0 0 .85rem; font-size: .875rem; color: var(--grafite-500); }
-.entrada__demo-acoes { display: grid; gap: .5rem; }
+/* Contas de demonstração (VITE_MODO_DEMO=true): painel com um cartão por papel */
+.entrada__demo {
+  width: 100%;
+  max-width: 34rem;
+  padding: var(--e5);
+  background: var(--creme-100);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-3);
+}
+
+.entrada__demo-titulo {
+  margin: 0 0 var(--e1);
+  font-family: var(--fonte-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.entrada__demo-texto {
+  margin: 0 0 var(--e4);
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.entrada__demo-cartoes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e3);
+}
+
+.demo-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  padding: var(--e4) var(--e3) var(--e3);
+  text-align: left;
+  background: var(--papel);
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio-2);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.demo-cartao:hover:not(:disabled),
+.demo-cartao:focus-visible {
+  border-color: var(--bordo-700);
+  /* fio dourado no topo: aparece ao apontar, como a marca de seleção do portal */
+  box-shadow: inset 0 3px 0 var(--ouro-500);
+}
+
+.demo-cartao:focus-visible {
+  outline: 2px solid var(--ouro-500);
+  outline-offset: 2px;
+}
+
+.demo-cartao:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.demo-cartao[aria-busy='true'] {
+  opacity: 1;
+  border-color: var(--bordo-700);
+  box-shadow: inset 0 3px 0 var(--ouro-500);
+}
+
+.demo-cartao__papel {
+  font-family: var(--fonte-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--bordo-700);
+}
+
+.demo-cartao__texto {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--texto-suave);
+}
+
+@media (max-width: 34rem) {
+  .entrada__demo-cartoes {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-cartao {
+    transition: none;
+  }
+}
 
 /* Seletor de idioma no canto do painel de login */
 .entrada__idioma {
