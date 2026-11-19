@@ -26,6 +26,14 @@ export function idiomaAtual() {
   return atual
 }
 
+// Trocar o idioma remonta as telas; guarda qual botão tinha o foco para devolvê-lo (teclado e leitor de tela).
+let focoPendente = null
+export function consumirFoco() {
+  const f = focoPendente
+  focoPendente = null
+  return f
+}
+
 function interpolar(texto, vars) {
   if (!vars) return texto
   return texto.replace(/\{(\w+)\}/g, (m, nome) => (vars[nome] === undefined || vars[nome] === null ? m : String(vars[nome])))
@@ -59,6 +67,7 @@ export function IdiomaProvider({ children }) {
   const mudar = useCallback((novo) => {
     if (!IDIOMAS.includes(novo)) return
     atual = novo // antes de renderizar, para que t() já responda no novo idioma
+    focoPendente = novo
     try {
       localStorage.setItem(CHAVE, novo)
     } catch {

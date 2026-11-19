@@ -19,9 +19,9 @@ export default function Header({ rotas, onMenu }) {
       <Migalhas rotas={rotas} />
       <div className="header__acoes">
         <Busca />
-        <SeletorIdioma />
         <Avisos />
         <MenuPerfil />
+        <SeletorIdioma />
       </div>
     </header>
   )
