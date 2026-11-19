@@ -101,7 +101,7 @@ export default function Semestre() {
                           <p className="secao__texto">Este currículo não tem disciplinas.</p>
                         ) : (
                           <div className="tabela-caixa">
-                            <table className="tabela">
+                            <table className="tabela tabela--cartoes">
                               <thead>
                                 <tr>
                                   <th scope="col">Disciplina</th>
@@ -116,9 +116,9 @@ export default function Semestre() {
                                     <td>
                                       <strong>{d.codigo}</strong> {d.nome}
                                     </td>
-                                    <td>{d.professorNome || <Selo tom="ambar">Sem professor</Selo>}</td>
-                                    <td>{d.creditos}</td>
-                                    <td>
+                                    <td data-rotulo="Professor">{d.professorNome || <Selo tom="ambar">Sem professor</Selo>}</td>
+                                    <td data-rotulo="Créditos">{d.creditos}</td>
+                                    <td data-rotulo="Situação">
                                       <Selo tom={TOM_STATUS_DISCIPLINA[d.status]}>{ROTULO_STATUS_DISCIPLINA[d.status]}</Selo>
                                     </td>
                                   </tr>

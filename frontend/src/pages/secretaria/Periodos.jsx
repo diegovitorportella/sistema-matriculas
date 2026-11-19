@@ -54,7 +54,7 @@ export default function Periodos() {
               </button>
             </div>
             <div className="tabela-caixa">
-              <table className="tabela">
+              <table className="tabela tabela--cartoes">
                 <thead>
                   <tr>
                     <th scope="col">Disciplina</th>
@@ -68,13 +68,13 @@ export default function Periodos() {
                       <td>
                         <strong>{r.codigo}</strong> {r.nome}
                       </td>
-                      <td>
+                      <td data-rotulo="Inscritos">
                         <div className="inscritos">
                           <span>{r.matriculados}</span>
                           <Progresso valor={r.matriculados} max={MAX_ALUNOS} marca={MIN_ALUNOS} rotulo={`${r.matriculados} inscritos`} tom={r.matriculados >= MIN_ALUNOS ? 'verde' : 'bordo'} />
                         </div>
                       </td>
-                      <td>
+                      <td data-rotulo="Situação">
                         <Selo tom={r.status === 'ATIVA' ? 'verde' : 'erro'} icone={r.status === 'ATIVA' ? 'check' : 'x'}>
                           {r.status === 'ATIVA' ? 'Ativa no próximo semestre' : 'Cancelada, menos de 3 inscritos'}
                         </Selo>

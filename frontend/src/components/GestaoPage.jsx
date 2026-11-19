@@ -158,7 +158,7 @@ export default function GestaoPage({
             </div>
 
             <div className="tabela-caixa">
-              <table className="tabela">
+              <table className="tabela tabela--cartoes">
                 <thead>
                   <tr>
                     {colunas.map((c) => (
@@ -175,9 +175,9 @@ export default function GestaoPage({
                   {filtrados.map((item) => (
                     <tr key={item.id}>
                       {colunas.map((c) => (
-                        <td key={c.rotulo}>{c.render(item)}</td>
+                        <td key={c.rotulo} data-rotulo={c.rotulo}>{c.render(item)}</td>
                       ))}
-                      <td>
+                      <td className="tabela__celula-acoes">
                         <div className="tabela__acoes">
                           <button type="button" className="btn-texto" onClick={() => abrirEdicao(item)} aria-label={`Editar ${rotuloItem(item)}`}>
                             Editar

@@ -452,4 +452,20 @@
   .menu-perfil__texto {
     display: none;
   }
+
+  /* Busca e avisos abrem sob a barra inteira, em vez de a partir do ícone, para não saírem da tela */
+  .header .busca,
+  .header .sino {
+    position: static;
+  }
+
+  .popover--busca,
+  .popover--avisos {
+    top: calc(100% + var(--e1));
+    right: var(--e3);
+    left: var(--e3);
+    width: auto;
+    min-width: 0;
+    max-height: 70vh;
+  }
 }

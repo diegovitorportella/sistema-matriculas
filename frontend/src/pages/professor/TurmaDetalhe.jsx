@@ -101,7 +101,7 @@ export default function TurmaDetalhe() {
                     </div>
                   </div>
                   <div className="tabela-caixa">
-                    <table className="tabela">
+                    <table className="tabela tabela--cartoes">
                       <thead>
                         <tr>
                           <th scope="col">Aluno</th>
@@ -118,8 +118,8 @@ export default function TurmaDetalhe() {
                                 <strong>{a.nome}</strong>
                               </div>
                             </td>
-                            <td>{a.matricula}</td>
-                            <td>{a.cursoNome || 'Sem curso'}</td>
+                            <td data-rotulo="Matrícula">{a.matricula}</td>
+                            <td data-rotulo="Curso">{a.cursoNome || 'Sem curso'}</td>
                           </tr>
                         ))}
                         {filtrados.length === 0 && (

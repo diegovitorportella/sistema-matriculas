@@ -536,6 +536,86 @@
   text-align: right !important;
 }
 
+/* Celular: cada linha vira um cartão, com o rótulo da coluna antes de cada valor */
+@media (max-width: 40rem) {
+  .tabela--cartoes,
+  .tabela--cartoes tbody,
+  .tabela--cartoes tr,
+  .tabela--cartoes td {
+    display: block;
+    width: 100%;
+  }
+
+  /* O cabeçalho continua disponível para leitores de tela, só sai da vista */
+  .tabela--cartoes thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .tabela--cartoes tbody tr {
+    padding: var(--e4);
+  }
+
+  .tabela--cartoes tbody tr + tr {
+    border-top: 1px solid var(--linha);
+  }
+
+  .tabela--cartoes tbody tr + tr td {
+    border-top: 0;
+  }
+
+  .tabela--cartoes tbody tr:hover td {
+    background: transparent;
+  }
+
+  .tabela--cartoes td {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e1) var(--e3);
+    padding: var(--e2) 0;
+    text-align: right;
+  }
+
+  .tabela--cartoes td[data-rotulo]::before {
+    content: attr(data-rotulo);
+    flex: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+    text-align: left;
+  }
+
+  /* A primeira célula (nome da disciplina, pessoa) abre o cartão, sem rótulo */
+  .tabela--cartoes td:first-child {
+    justify-content: flex-start;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .tabela--cartoes td:first-child::before {
+    content: none;
+  }
+
+  .tabela--cartoes .tabela__celula-acoes {
+    justify-content: flex-start;
+    padding-bottom: 0;
+  }
+
+  .tabela--cartoes .tabela__acoes {
+    justify-content: flex-start;
+  }
+
+  .tabela--cartoes td[colspan] {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 .tabela__rodape {
   display: flex;
   justify-content: space-between;

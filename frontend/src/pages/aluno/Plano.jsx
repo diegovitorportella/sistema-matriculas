@@ -241,7 +241,7 @@ export default function Plano() {
           Confira as disciplinas e o tipo de cada uma. Se uma delas estiver lotada ou fora das regras, o sistema recusa só ela e mantém as demais.
         </p>
         <div className="tabela-caixa">
-          <table className="tabela">
+          <table className="tabela tabela--cartoes">
             <thead>
               <tr>
                 <th scope="col">Disciplina</th>
@@ -258,9 +258,9 @@ export default function Plano() {
                     <td>
                       <strong>{d?.codigo}</strong> {d?.nome}
                     </td>
-                    <td>{d?.professorNome || 'A definir'}</td>
-                    <td>{d?.creditos}</td>
-                    <td>
+                    <td data-rotulo="Professor">{d?.professorNome || 'A definir'}</td>
+                    <td data-rotulo="Créditos">{d?.creditos}</td>
+                    <td data-rotulo="Tipo">
                       <button type="button" className="btn btn--secundario btn--sm" onClick={() => trocar(p.disciplinaId)} disabled={enviando} title="Alternar entre primeira opção e alternativa">
                         {ROTULO_TIPO[p.tipo]}
                       </button>

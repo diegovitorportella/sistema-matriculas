@@ -68,7 +68,7 @@ export default function MinhasMatriculas() {
               ]}
             />
             <div className="tabela-caixa espaco-topo">
-              <table className="tabela">
+              <table className="tabela tabela--cartoes">
                 <thead>
                   <tr>
                     <th scope="col">Disciplina</th>
@@ -95,13 +95,13 @@ export default function MinhasMatriculas() {
                             </div>
                           </div>
                         </td>
-                        <td>{d?.professorNome || 'A definir'}</td>
-                        <td>{d?.creditos ?? '-'}</td>
-                        <td>
+                        <td data-rotulo="Professor">{d?.professorNome || 'A definir'}</td>
+                        <td data-rotulo="Créditos">{d?.creditos ?? '-'}</td>
+                        <td data-rotulo="Tipo">
                           <Selo tom={m.tipo === 'OBRIGATORIA' ? 'bordo' : 'ouro'}>{ROTULO_TIPO[m.tipo]}</Selo>
                         </td>
-                        <td>{formatarData(m.dataMatricula)}</td>
-                        <td>
+                        <td data-rotulo="Matriculado em">{formatarData(m.dataMatricula)}</td>
+                        <td className="tabela__celula-acoes">
                           <div className="tabela__acoes">
                             <button type="button" className="btn-texto btn-texto--perigo" onClick={() => setCancelando(m)}>
                               Cancelar
