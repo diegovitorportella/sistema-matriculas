@@ -5,6 +5,8 @@ import Brasao from '../../components/Brasao.jsx'
 import Foto, { LegendaFoto } from '../../components/ui/Foto.jsx'
 import CreditosFotos from '../../components/ui/CreditosFotos.jsx'
 import Icone from '../../components/ui/Icone.jsx'
+import { t } from '../../i18n/index.jsx'
+import SeletorIdioma from '../../components/SeletorIdioma.jsx'
 
 const MODO_DEMO = import.meta.env.VITE_MODO_DEMO === 'true'
 const SENHA_DEMO = import.meta.env.VITE_SENHA_DEMO || 'demo12345'
@@ -52,20 +54,21 @@ export default function Login() {
       </section>
 
       <section className="entrada__painel">
+        <SeletorIdioma className="entrada__idioma" />
         <form className="entrada__form" onSubmit={enviar} noValidate>
           <div className="entrada__cabecalho">
             <Brasao tamanho={64} className="entrada__brasao-pequeno" />
-            <h1>Portal acadêmico</h1>
-            <p className="entrada__texto">Entre com o usuário e a senha fornecidos pela secretaria.</p>
+            <h1>{t('Portal acadêmico')}</h1>
+            <p className="entrada__texto">{t('Entre com o usuário e a senha fornecidos pela secretaria.')}</p>
           </div>
 
           <label className="campo">
-            <span className="campo__rotulo">Usuário</span>
+            <span className="campo__rotulo">{t('Usuário')}</span>
             <input value={login} onChange={(e) => setLogin(e.target.value)} autoComplete="username" autoFocus required />
           </label>
 
           <label className="campo">
-            <span className="campo__rotulo">Senha</span>
+            <span className="campo__rotulo">{t('Senha')}</span>
             <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} autoComplete="current-password" required />
           </label>
 
@@ -77,19 +80,19 @@ export default function Login() {
           )}
 
           <button type="submit" className="btn btn--primario btn--largo" disabled={enviando || !login || !senha}>
-            {enviando ? 'Entrando…' : 'Entrar'}
+            {enviando ? t('Entrando…') : t('Entrar')}
           </button>
         </form>
 
         {MODO_DEMO && (
           <div className="entrada__demo">
-            <p className="entrada__demo-titulo">Explorar a demonstração</p>
-            <p className="entrada__demo-texto">Contas de exemplo com dados fictícios já cadastrados.</p>
+            <p className="entrada__demo-titulo">{t('Explorar a demonstração')}</p>
+            <p className="entrada__demo-texto">{t('Contas de exemplo com dados fictícios já cadastrados.')}</p>
             <div className="entrada__demo-acoes">
               {ACESSOS_DEMO.map((a) => (
                 <button key={a.login} type="button" className="btn btn--secundario" disabled={enviando}
                   onClick={(e) => enviar(e, { login: a.login, senha: SENHA_DEMO })}>
-                  {a.rotulo}
+                  {t(a.rotulo)}
                 </button>
               ))}
             </div>
@@ -97,9 +100,9 @@ export default function Login() {
         )}
 
         <p className="entrada__creditos">
-          Instituição fictícia, criada para fins acadêmicos.{' '}
+          {t('Instituição fictícia, criada para fins acadêmicos.')}{' '}
           <button type="button" className="btn-texto" onClick={() => setCreditos(true)}>
-            Créditos das fotografias
+           {t('Créditos das fotografias')}
           </button>
         </p>
       </section>

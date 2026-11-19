@@ -4,12 +4,13 @@ import { useSecretaria } from '../../contexts/SecretariaDados.jsx'
 import { fotoDaDisciplina } from '../../data/areas.js'
 import { alunos, cursos, disciplinas, professores } from '../../services'
 import { ROTULO_STATUS_DISCIPLINA, TOM_STATUS_DISCIPLINA } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 const pessoa = (i) => (
   <div className="tabela__pessoa">
-    <Avatar nome={i.nome} />
+    <Avatar nome={t(i.nome)} />
     <div>
-      <strong>{i.nome}</strong>
+      <strong>{t(i.nome)}</strong>
       <small>{i.login}</small>
     </div>
   </div>
@@ -18,24 +19,24 @@ const pessoa = (i) => (
 export function Alunos() {
   return (
     <GestaoPage
-      titulo="Alunos"
-      descricao="Cadastro de alunos, com curso e acesso ao portal."
+      titulo={t('Alunos')}
+      descricao={t('Cadastro de alunos, com curso e acesso ao portal.')}
       singular="aluno"
       chave="alunos"
       servico={alunos}
       buscaCampos={['nome', 'matricula', 'login', 'cursoNome']}
-      filtros={[{ rotulo: 'Curso', valor: (a) => a.cursoNome || 'Sem curso' }]}
+      filtros={[{ rotulo: t('Curso'), valor: (a) => t(a.cursoNome) || t('Sem curso') }]}
       colunas={[
-        { rotulo: 'Aluno', render: pessoa },
-        { rotulo: 'Matrícula', render: (a) => a.matricula },
-        { rotulo: 'Curso', render: (a) => a.cursoNome || 'Sem curso' },
+        { rotulo: t('Aluno'), render: pessoa },
+        { rotulo: t('Matrícula'), render: (a) => a.matricula },
+        { rotulo: t('Curso'), render: (a) => t(a.cursoNome) || t('Sem curso') },
       ]}
       campos={[
-        { nome: 'nome', rotulo: 'Nome completo', obrigatorio: true },
-        { nome: 'matricula', rotulo: 'Número de matrícula', obrigatorio: true },
-        { nome: 'login', rotulo: 'Usuário de acesso', obrigatorio: true },
-        { nome: 'senha', rotulo: 'Senha', tipo: 'password', senha: true },
-        { nome: 'cursoId', rotulo: 'Curso', tipo: 'select', opcoes: { chave: 'cursos', rotulo: 'nome' } },
+        { nome: 'nome', rotulo: t('Nome completo'), obrigatorio: true },
+        { nome: 'matricula', rotulo: t('Número de matrícula'), obrigatorio: true },
+        { nome: 'login', rotulo: t('Usuário de acesso'), obrigatorio: true },
+        { nome: 'senha', rotulo: t('Senha'), tipo: 'password', senha: true },
+        { nome: 'cursoId', rotulo: t('Curso'), tipo: 'select', opcoes: { chave: 'cursos', rotulo: 'nome' } },
       ]}
     />
   )
@@ -45,16 +46,16 @@ export function Professores() {
   const { disciplinas: todas } = useSecretaria()
   return (
     <GestaoPage
-      titulo="Professores"
-      descricao="Cadastro de professores e acesso ao portal."
+      titulo={t('Professores')}
+      descricao={t('Cadastro de professores e acesso ao portal.')}
       singular="professor"
       chave="professores"
       servico={professores}
       buscaCampos={['nome', 'login']}
       colunas={[
-        { rotulo: 'Professor', render: pessoa },
+        { rotulo: t('Professor'), render: pessoa },
         {
-          rotulo: 'Disciplinas',
+          rotulo: t('Disciplinas'),
           render: (p) => {
             const n = todas.filter((d) => d.professorId === p.id).length
             return n === 0 ? 'Nenhuma' : n
@@ -62,9 +63,9 @@ export function Professores() {
         },
       ]}
       campos={[
-        { nome: 'nome', rotulo: 'Nome completo', obrigatorio: true },
-        { nome: 'login', rotulo: 'Usuário de acesso', obrigatorio: true },
-        { nome: 'senha', rotulo: 'Senha', tipo: 'password', senha: true },
+        { nome: 'nome', rotulo: t('Nome completo'), obrigatorio: true },
+        { nome: 'login', rotulo: t('Usuário de acesso'), obrigatorio: true },
+        { nome: 'senha', rotulo: t('Senha'), tipo: 'password', senha: true },
       ]}
     />
   )
@@ -73,41 +74,41 @@ export function Professores() {
 export function Disciplinas() {
   return (
     <GestaoPage
-      titulo="Disciplinas"
-      descricao="Cada disciplina precisa de 3 alunos para ser confirmada e aceita até 60."
+      titulo={t('Disciplinas')}
+      descricao={t('Cada disciplina precisa de 3 alunos para ser confirmada e aceita até 60.')}
       singular="disciplina"
       genero="a"
       chave="disciplinas"
       servico={disciplinas}
-      rotuloItem={(d) => `${d.codigo} ${d.nome}`}
+      rotuloItem={(d) => `${d.codigo} ${t(d.nome)}`}
       buscaCampos={['codigo', 'nome', 'professorNome']}
       filtros={[
-        { rotulo: 'Situação', valor: (d) => ROTULO_STATUS_DISCIPLINA[d.status] },
-        { rotulo: 'Professor', valor: (d) => d.professorNome || 'Sem professor' },
+        { rotulo: t('Situação'), valor: (d) => ROTULO_STATUS_DISCIPLINA[d.status] },
+        { rotulo: t('Professor'), valor: (d) => d.professorNome || t('Sem professor') },
       ]}
       colunas={[
         {
-          rotulo: 'Disciplina',
+          rotulo: t('Disciplina'),
           render: (d) => (
             <div className="tabela__pessoa">
               <img className="tabela__miniatura" alt="" src={`/fotos/${fotoDaDisciplina(d)}.jpg`} loading="lazy" />
               <div>
                 <strong>{d.codigo}</strong>
-                <small>{d.nome}</small>
+                <small>{t(d.nome)}</small>
               </div>
             </div>
           ),
         },
-        { rotulo: 'Professor', render: (d) => d.professorNome || <Selo tom="ambar">Sem professor</Selo> },
-        { rotulo: 'Créditos', render: (d) => d.creditos },
-        { rotulo: 'Situação', render: (d) => <Selo tom={TOM_STATUS_DISCIPLINA[d.status]}>{ROTULO_STATUS_DISCIPLINA[d.status]}</Selo> },
+        { rotulo: t('Professor'), render: (d) => d.professorNome || <Selo tom="ambar">{t('Sem professor')}</Selo> },
+        { rotulo: t('Créditos'), render: (d) => d.creditos },
+        { rotulo: t('Situação'), render: (d) => <Selo tom={TOM_STATUS_DISCIPLINA[d.status]}>{ROTULO_STATUS_DISCIPLINA[d.status]}</Selo> },
       ]}
       campos={[
-        { nome: 'codigo', rotulo: 'Código', obrigatorio: true },
-        { nome: 'nome', rotulo: 'Nome da disciplina', obrigatorio: true },
-        { nome: 'creditos', rotulo: 'Créditos', tipo: 'number', obrigatorio: true, min: 1 },
-        { nome: 'professorId', rotulo: 'Professor', tipo: 'select', opcoes: { chave: 'professores', rotulo: 'nome' } },
-        { nome: 'cursoId', rotulo: 'Curso', tipo: 'select', soCriacao: true, opcoes: { chave: 'cursos', rotulo: 'nome' } },
+        { nome: 'codigo', rotulo: t('Código'), obrigatorio: true },
+        { nome: 'nome', rotulo: t('Nome da disciplina'), obrigatorio: true },
+        { nome: 'creditos', rotulo: t('Créditos'), tipo: 'number', obrigatorio: true, min: 1 },
+        { nome: 'professorId', rotulo: t('Professor'), tipo: 'select', opcoes: { chave: 'professores', rotulo: 'nome' } },
+        { nome: 'cursoId', rotulo: t('Curso'), tipo: 'select', soCriacao: true, opcoes: { chave: 'cursos', rotulo: 'nome' } },
       ]}
     />
   )
@@ -117,20 +118,20 @@ export function Cursos() {
   const { alunos: todos } = useSecretaria()
   return (
     <GestaoPage
-      titulo="Cursos"
-      descricao="Cursos da universidade e o total de créditos de cada um."
+      titulo={t('Cursos')}
+      descricao={t('Cursos da universidade e o total de créditos de cada um.')}
       singular="curso"
       chave="cursos"
       servico={cursos}
       buscaCampos={['nome']}
       colunas={[
-        { rotulo: 'Curso', render: (c) => <strong>{c.nome}</strong> },
-        { rotulo: 'Créditos', render: (c) => c.creditos },
-        { rotulo: 'Alunos', render: (c) => todos.filter((a) => a.cursoId === c.id).length },
+        { rotulo: t('Curso'), render: (c) => <strong>{t(c.nome)}</strong> },
+        { rotulo: t('Créditos'), render: (c) => c.creditos },
+        { rotulo: t('Alunos'), render: (c) => todos.filter((a) => a.cursoId === c.id).length },
       ]}
       campos={[
-        { nome: 'nome', rotulo: 'Nome do curso', obrigatorio: true },
-        { nome: 'creditos', rotulo: 'Total de créditos', tipo: 'number', obrigatorio: true, min: 1 },
+        { nome: 'nome', rotulo: t('Nome do curso'), obrigatorio: true },
+        { nome: 'creditos', rotulo: t('Total de créditos'), tipo: 'number', obrigatorio: true, min: 1 },
       ]}
     />
   )

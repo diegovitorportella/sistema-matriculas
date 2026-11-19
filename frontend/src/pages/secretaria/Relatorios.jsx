@@ -3,6 +3,7 @@ import { Carga, CabecalhoPagina, Estatisticas, Secao, Selo, Vazio } from '../../
 import { Barras, Rosca } from '../../components/ui/Graficos.jsx'
 import Icone from '../../components/ui/Icone.jsx'
 import { ROTULO_STATUS_DISCIPLINA, baixarCsv, plural } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 function contar(lista, chave) {
   const mapa = new Map()
@@ -14,30 +15,30 @@ export default function Relatorios() {
   const s = useSecretaria()
 
   const porStatus = (st) => s.disciplinas.filter((d) => d.status === st).length
-  const alunosPorCurso = contar(s.alunos, (a) => a.cursoNome || 'Sem curso')
-  const disciplinasPorProfessor = contar(s.disciplinas, (d) => d.professorNome || 'Sem professor')
+  const alunosPorCurso = contar(s.alunos, (a) => t(a.cursoNome) || t('Sem curso'))
+  const disciplinasPorProfessor = contar(s.disciplinas, (d) => d.professorNome || t('Sem professor'))
   const atencao = s.disciplinas.filter((d) => !d.professorId || d.status === 'CANCELADA')
-  const creditos = s.disciplinas.reduce((t, d) => t + d.creditos, 0)
+  const creditos = s.disciplinas.reduce((soma, d) => soma + d.creditos, 0)
 
   function exportar() {
     baixarCsv('disciplinas.csv', [
-      ['Código', 'Disciplina', 'Créditos', 'Professor', 'Situação'],
-      ...s.disciplinas.map((d) => [d.codigo, d.nome, d.creditos, d.professorNome ?? '', ROTULO_STATUS_DISCIPLINA[d.status]]),
+      [t('Código'), t('Disciplina'), t('Créditos'), t('Professor'), t('Situação')],
+      ...s.disciplinas.map((d) => [d.codigo, t(d.nome), d.creditos, d.professorNome ?? '', ROTULO_STATUS_DISCIPLINA[d.status]]),
     ])
   }
 
   return (
     <>
       <CabecalhoPagina
-        titulo="Relatórios"
-        descricao="Panorama calculado com os cadastros atuais: disciplinas, professores, alunos e cursos."
+        titulo={t('Relatórios')}
+        descricao={t('Panorama calculado com os cadastros atuais: disciplinas, professores, alunos e cursos.')}
         acoes={
           <>
             <button type="button" className="btn btn--secundario" onClick={exportar} disabled={s.disciplinas.length === 0}>
-              <Icone nome="baixar" tamanho={18} /> Exportar disciplinas (CSV)
+              <Icone nome="baixar" tamanho={18} /> {t('Exportar disciplinas (CSV)')}
             </button>
             <button type="button" className="btn btn--primario" onClick={() => window.print()}>
-              Imprimir
+             {t('Imprimir')}
             </button>
           </>
         }
@@ -47,63 +48,63 @@ export default function Relatorios() {
        <div className="pagina-corpo pagina-corpo--colado">
         <Estatisticas
           itens={[
-            { valor: s.alunos.length, rotulo: 'Alunos' },
-            { valor: s.professores.length, rotulo: 'Professores' },
-            { valor: s.disciplinas.length, rotulo: 'Disciplinas', detalhe: `${creditos} créditos somados` },
-            { valor: s.curriculos.length, rotulo: s.curriculos.length === 1 ? 'Currículo' : 'Currículos' },
+            { valor: s.alunos.length, rotulo: t('Alunos') },
+            { valor: s.professores.length, rotulo: t('Professores') },
+            { valor: s.disciplinas.length, rotulo: t('Disciplinas'), detalhe: t('{n} créditos somados', { n: creditos }) },
+            { valor: s.curriculos.length, rotulo: s.curriculos.length === 1 ? t('Currículo') : t('Currículos') },
           ]}
         />
 
         <div className="duas-colunas">
-          <Secao id="rel-status" titulo="Disciplinas por situação" descricao="Inscrições abertas, confirmadas e canceladas ao fim dos períodos.">
+          <Secao id="rel-status" titulo={t('Disciplinas por situação')} descricao={t('Inscrições abertas, confirmadas e canceladas ao fim dos períodos.')}>
             {s.disciplinas.length === 0 ? (
-              <Vazio titulo="Sem disciplinas" texto="Cadastre disciplinas para ver este relatório." />
+              <Vazio titulo={t('Sem disciplinas')} texto={t('Cadastre disciplinas para ver este relatório.')} />
             ) : (
               <Rosca
                 centro={s.disciplinas.length}
-                rotuloCentro="disciplinas"
+                rotuloCentro={t('disciplinas')}
                 dados={[
-                  { rotulo: 'Inscrições abertas', valor: porStatus('ABERTA'), cor: 'var(--ouro-500)' },
-                  { rotulo: 'Confirmadas', valor: porStatus('ATIVA'), cor: 'var(--verde-600)' },
-                  { rotulo: 'Canceladas', valor: porStatus('CANCELADA'), cor: 'var(--erro-700)' },
+                  { rotulo: t('Inscrições abertas'), valor: porStatus('ABERTA'), cor: 'var(--ouro-500)' },
+                  { rotulo: t('Confirmadas'), valor: porStatus('ATIVA'), cor: 'var(--verde-600)' },
+                  { rotulo: t('Canceladas'), valor: porStatus('CANCELADA'), cor: 'var(--erro-700)' },
                 ]}
               />
             )}
           </Secao>
 
-          <Secao id="rel-cursos" titulo="Alunos por curso">
-            {alunosPorCurso.length === 0 ? <Vazio titulo="Sem alunos" texto="Cadastre alunos para ver este relatório." /> : <Barras dados={alunosPorCurso} />}
+          <Secao id="rel-cursos" titulo={t('Alunos por curso')}>
+            {alunosPorCurso.length === 0 ? <Vazio titulo={t('Sem alunos')} texto={t('Cadastre alunos para ver este relatório.')} /> : <Barras dados={alunosPorCurso} />}
           </Secao>
         </div>
 
         <div className="duas-colunas">
-          <Secao id="rel-professores" titulo="Disciplinas por professor">
+          <Secao id="rel-professores" titulo={t('Disciplinas por professor')}>
             {disciplinasPorProfessor.length === 0 ? (
-              <Vazio titulo="Sem disciplinas" texto="Cadastre disciplinas para ver este relatório." />
+              <Vazio titulo={t('Sem disciplinas')} texto={t('Cadastre disciplinas para ver este relatório.')} />
             ) : (
               <Barras dados={disciplinasPorProfessor} cor="var(--ouro-500)" />
             )}
           </Secao>
 
-          <Secao id="rel-atencao" titulo="Disciplinas que pedem atenção" descricao="Sem professor associado ou canceladas.">
+          <Secao id="rel-atencao" titulo={t('Disciplinas que pedem atenção')} descricao={t('Sem professor associado ou canceladas.')}>
             {atencao.length === 0 ? (
-              <p className="secao__texto">Nenhuma disciplina pede atenção.</p>
+              <p className="secao__texto">{t('Nenhuma disciplina pede atenção.')}</p>
             ) : (
               <ul className="lista-simples">
                 {atencao.map((d) => (
                   <li key={d.id}>
                     <span>
-                      <strong>{d.codigo}</strong> {d.nome}
+                      <strong>{d.codigo}</strong> {t(d.nome)}
                     </span>
                     <span className="lista-simples__direita">
-                      {!d.professorId && <Selo tom="ambar">Sem professor</Selo>}
-                      {d.status === 'CANCELADA' && <Selo tom="erro">Cancelada</Selo>}
+                      {!d.professorId && <Selo tom="ambar">{t('Sem professor')}</Selo>}
+                      {d.status === 'CANCELADA' && <Selo tom="erro">{t('Cancelada')}</Selo>}
                     </span>
                   </li>
                 ))}
               </ul>
             )}
-            {atencao.length > 0 && <p className="nota">{plural(atencao.length, 'disciplina', 'disciplinas')} nesta lista.</p>}
+            {atencao.length > 0 && <p className="nota">{plural(atencao.length, 'disciplina', 'disciplinas')} {t('nesta lista.')}</p>}
           </Secao>
         </div>
        </div>

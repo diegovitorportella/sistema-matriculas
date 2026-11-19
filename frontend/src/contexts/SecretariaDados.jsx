@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { alunos, cursos, curriculos, disciplinas, periodos, professores } from '../services'
 import { contem, diasAte, formatarData, plural } from '../util'
 import { ShellDados } from './ShellDados.js'
+import { t, useIdioma } from '../i18n/index.jsx'
 
 const SecretariaContext = createContext(null)
 export const useSecretaria = () => useContext(SecretariaContext)
@@ -9,6 +10,7 @@ export const useSecretaria = () => useContext(SecretariaContext)
 const VAZIO = { alunos: [], professores: [], disciplinas: [], cursos: [], curriculos: [], periodos: [] }
 
 export function SecretariaProvider({ children }) {
+  const { idioma } = useIdioma() // avisos e busca são recalculados ao trocar de idioma
   const [estado, setEstado] = useState({ carregando: true, erro: null, dados: VAZIO })
 
   const carregar = useCallback(async () => {
@@ -47,29 +49,29 @@ export function SecretariaProvider({ children }) {
       lista.push({
         id: 'periodo',
         tom: dias <= 3 ? 'ambar' : 'info',
-        titulo: `Matrículas de ${periodoAberto.semestre} terminam em ${plural(dias, 'dia', 'dias')}`,
-        texto: `Prazo final: ${formatarData(periodoAberto.fim)}. Encerre o período para ativar ou cancelar as disciplinas.`,
+        titulo: t('Matrículas de {semestre} terminam em {prazo}', { semestre: periodoAberto.semestre, prazo: plural(dias, 'dia', 'dias') }),
+        texto: t('Prazo final: {data}. Encerre o período para ativar ou cancelar as disciplinas.', { data: formatarData(periodoAberto.fim) }),
         to: '/matriculas',
       })
     }
     const foraDatas = dados.periodos.filter((p) => !p.aberto && !p.encerrado)
     for (const p of foraDatas) {
-      lista.push({ id: `fora-${p.id}`, tom: 'ambar', titulo: `Período ${p.semestre} fora das datas`, texto: 'O prazo acabou, mas o período ainda não foi encerrado.', to: '/matriculas' })
+      lista.push({ id: `fora-${p.id}`, tom: 'ambar', titulo: t('Período {semestre} fora das datas', { semestre: p.semestre }), texto: t('O prazo acabou, mas o período ainda não foi encerrado.'), to: '/matriculas' })
     }
     const semPeriodo = dados.curriculos.filter((c) => !c.periodoId)
     if (semPeriodo.length > 0) {
-      lista.push({ id: 'sem-periodo', tom: 'info', titulo: `${plural(semPeriodo.length, 'currículo sem período', 'currículos sem período')}`, texto: 'Abra o período de matrículas para que os alunos possam se inscrever.', to: '/semestre' })
+      lista.push({ id: 'sem-periodo', tom: 'info', titulo: plural(semPeriodo.length, 'currículo sem período', 'currículos sem período'), texto: t('Abra o período de matrículas para que os alunos possam se inscrever.'), to: '/semestre' })
     }
     const semProfessor = dados.disciplinas.filter((d) => !d.professorId)
     if (semProfessor.length > 0) {
-      lista.push({ id: 'sem-prof', tom: 'ambar', titulo: `${plural(semProfessor.length, 'disciplina sem professor', 'disciplinas sem professor')}`, texto: 'Associe um professor para que ele consulte a turma.', to: '/disciplinas' })
+      lista.push({ id: 'sem-prof', tom: 'ambar', titulo: plural(semProfessor.length, 'disciplina sem professor', 'disciplinas sem professor'), texto: t('Associe um professor para que ele consulte a turma.'), to: '/disciplinas' })
     }
     const canceladas = dados.disciplinas.filter((d) => d.status === 'CANCELADA')
     if (canceladas.length > 0) {
-      lista.push({ id: 'canceladas', tom: 'info', titulo: `${plural(canceladas.length, 'disciplina cancelada', 'disciplinas canceladas')}`, texto: 'Ficaram com menos de 3 alunos ao fim do período.', to: '/relatorios' })
+      lista.push({ id: 'canceladas', tom: 'info', titulo: plural(canceladas.length, 'disciplina cancelada', 'disciplinas canceladas'), texto: t('Ficaram com menos de 3 alunos ao fim do período.'), to: '/relatorios' })
     }
     return lista
-  }, [estado.carregando, periodoAberto, dados])
+  }, [estado.carregando, periodoAberto, dados, idioma])
 
   const buscar = useCallback(
     (termo) => {
@@ -79,13 +81,13 @@ export function SecretariaProvider({ children }) {
           .slice(0, 3)
           .map((i) => ({ grupo, titulo: titulo(i), subtitulo: sub?.(i), to: `${rota}?q=${encodeURIComponent(termo)}` }))
       return [
-        ...pega(dados.alunos, ['nome', 'matricula', 'login'], 'Alunos', '/alunos', (a) => a.nome, (a) => `Matrícula ${a.matricula}`),
-        ...pega(dados.professores, ['nome', 'login'], 'Professores', '/professores', (p) => p.nome),
-        ...pega(dados.disciplinas, ['codigo', 'nome', 'professorNome'], 'Disciplinas', '/disciplinas', (d) => `${d.codigo} ${d.nome}`, (d) => d.professorNome),
-        ...pega(dados.cursos, ['nome'], 'Cursos', '/cursos', (c) => c.nome),
+        ...pega(dados.alunos, ['nome', 'matricula', 'login'], t('Alunos'), '/alunos', (a) => a.nome, (a) => t('Matrícula {matricula}', { matricula: a.matricula })),
+        ...pega(dados.professores, ['nome', 'login'], t('Professores'), '/professores', (p) => p.nome),
+        ...pega(dados.disciplinas, ['codigo', 'nome', 'professorNome'], t('Disciplinas'), '/disciplinas', (d) => `${d.codigo} ${t(d.nome)}`, (d) => d.professorNome),
+        ...pega(dados.cursos, ['nome'], t('Cursos'), '/cursos', (c) => t(c.nome)),
       ]
     },
-    [dados],
+    [dados, idioma],
   )
 
   const valor = useMemo(() => ({ ...estado, ...dados, periodoAberto, recarregar: carregar }), [estado, dados, periodoAberto, carregar])

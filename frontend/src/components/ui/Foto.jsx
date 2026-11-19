@@ -1,9 +1,10 @@
 import FOTOS from '../../data/fotos.json'
+import { t } from '../../i18n/index.jsx'
 
 /** Fotografias reais (Wikimedia Commons). Todas têm autor, licença e fonte em data/fotos.json. */
 export function legendaDaFoto(id) {
   const f = FOTOS[id]
-  return f ? `${f.lugar}. Foto: ${f.autor}, ${f.licenca}.` : ''
+  return f ? `${f.lugar}. ${t('Foto:')} ${f.autor}, ${f.licenca}.` : ''
 }
 
 export default function Foto({ id, posicao = 'center', alt = '', className = '', carregamento = 'lazy' }) {

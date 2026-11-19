@@ -5,6 +5,7 @@ import { Carga, CabecalhoPagina, EsqueletoCartas, Progresso, Selo, Vazio } from 
 import Foto from '../../components/ui/Foto.jsx'
 import Icone from '../../components/ui/Icone.jsx'
 import { MAX_ALUNOS, MIN_ALUNOS, ROTULO_STATUS_DISCIPLINA, TOM_STATUS_DISCIPLINA, contem, plural } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 export default function Turmas() {
   const [params, setParams] = useSearchParams()
@@ -15,25 +16,25 @@ export default function Turmas() {
   return (
     <>
       <CabecalhoPagina
-        titulo="Minhas disciplinas"
-        descricao="Escolha uma disciplina para ver os detalhes e a lista de alunos matriculados."
+        titulo={t('Minhas disciplinas')}
+        descricao={t('Escolha uma disciplina para ver os detalhes e a lista de alunos matriculados.')}
       />
 
       <Carga carregando={carregando} erro={erro} onTentar={recarregar} esqueleto={<EsqueletoCartas n={3} />}>
         {disciplinas.length === 0 ? (
-          <Vazio titulo="Você ainda não tem disciplinas" texto="A secretaria associa o professor a cada disciplina." />
+          <Vazio titulo={t('Você ainda não tem disciplinas')} texto={t('A secretaria associa o professor a cada disciplina.')} />
         ) : (
           <>
             <div className="barra-ferramentas">
               <div className="barra-ferramentas__busca">
                 <Icone nome="busca" tamanho={18} className="busca__icone" />
                 <label className="so-leitor" htmlFor="filtro-turmas">
-                  Filtrar disciplinas
+                 {t('Filtrar disciplinas')}
                 </label>
                 <input
                   id="filtro-turmas"
                   type="search"
-                  placeholder="Filtrar por nome ou código"
+                  placeholder={t('Filtrar por nome ou código')}
                   value={q}
                   onChange={(e) => setParams(e.target.value ? { q: e.target.value } : {}, { replace: true })}
                 />
@@ -41,7 +42,7 @@ export default function Turmas() {
             </div>
 
             {filtradas.length === 0 ? (
-              <Vazio icone="busca" titulo="Nenhuma disciplina encontrada" texto={`Nada corresponde a “${q}”.`} />
+              <Vazio icone="busca" titulo={t('Nenhuma disciplina encontrada')} texto={t('Nada corresponde a “{q}”.', { q })} />
             ) : (
               <ul className="grade-cartas">
                 {filtradas.map((d) => {
@@ -59,13 +60,13 @@ export default function Turmas() {
                           </div>
                           <h3 className="carta__titulo">
                             <Link to={`/turmas/${d.id}`} className="carta__link">
-                              {d.nome}
+                              {t(d.nome)}
                             </Link>
                           </h3>
                           <div className="carta__capacidade">
-                            <Progresso valor={n} max={MAX_ALUNOS} marca={MIN_ALUNOS} rotulo={`${n} de ${MAX_ALUNOS} alunos`} tom={n >= MIN_ALUNOS ? 'verde' : 'bordo'} />
+                            <Progresso valor={n} max={MAX_ALUNOS} marca={MIN_ALUNOS} rotulo={t('{n} de {max} alunos', { n, max: MAX_ALUNOS })} tom={n >= MIN_ALUNOS ? 'verde' : 'bordo'} />
                             <p className="carta__meta">
-                              {plural(n, 'aluno matriculado', 'alunos matriculados')} de {MAX_ALUNOS}
+                              {plural(n, 'aluno matriculado', 'alunos matriculados')} {t('de {max}', { max: MAX_ALUNOS })}
                             </p>
                           </div>
                         </div>

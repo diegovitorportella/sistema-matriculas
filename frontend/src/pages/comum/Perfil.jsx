@@ -5,6 +5,7 @@ import { useSecretaria } from '../../contexts/SecretariaDados.jsx'
 import { Avatar, CabecalhoPagina, Selo } from '../../components/ui/Basicos.jsx'
 import Foto, { LegendaFoto } from '../../components/ui/Foto.jsx'
 import { LIMITES, ROTULO_PERFIL } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 /** Perfil somente leitura: a API não oferece edição de dados pessoais. */
 export default function Perfil() {
@@ -13,34 +14,34 @@ export default function Perfil() {
   const professor = useProfessor()
   const secretaria = useSecretaria()
 
-  const linhas = [['Perfil de acesso', ROTULO_PERFIL[usuario.perfil] ?? usuario.perfil], ['Instituição', 'Horizon University, Belo Horizonte, Brazil']]
+  const linhas = [[t('Perfil de acesso'), ROTULO_PERFIL[usuario.perfil] ?? usuario.perfil], [t('Instituição'), 'Horizon University, Belo Horizonte, Brazil']]
   let orientacao = ''
 
   if (usuario.perfil === 'ALUNO' && aluno && !aluno.carregando) {
-    linhas.push(['Período de matrículas', aluno.periodo ? `${aluno.periodo.semestre}, aberto` : 'Nenhum aberto no momento'])
-    linhas.push(['Matrículas ativas', `${aluno.minhas.length} de ${LIMITES.OBRIGATORIA + LIMITES.OPTATIVA} vagas`])
-    orientacao = 'Para corrigir nome, curso ou senha, procure a secretaria.'
+    linhas.push([t('Período de matrículas'), aluno.periodo ? t('{semestre}, aberto', { semestre: aluno.periodo.semestre }) : t('Nenhum aberto no momento')])
+    linhas.push([t('Matrículas ativas'), t('{n} de {total} vagas', { n: aluno.minhas.length, total: LIMITES.OBRIGATORIA + LIMITES.OPTATIVA })])
+    orientacao = t('Para corrigir nome, curso ou senha, procure a secretaria.')
   }
   if (usuario.perfil === 'PROFESSOR' && professor && !professor.carregando) {
-    linhas.push(['Disciplinas', String(professor.disciplinas.length)])
-    linhas.push(['Alunos matriculados', String(professor.totalAlunos)])
-    orientacao = 'Para corrigir seus dados ou alterar a senha, procure a secretaria.'
+    linhas.push([t('Disciplinas'), String(professor.disciplinas.length)])
+    linhas.push([t('Alunos matriculados'), String(professor.totalAlunos)])
+    orientacao = t('Para corrigir seus dados ou alterar a senha, procure a secretaria.')
   }
   if (usuario.perfil === 'SECRETARIA' && secretaria && !secretaria.carregando) {
-    linhas.push(['Alunos cadastrados', String(secretaria.alunos.length)])
-    linhas.push(['Professores cadastrados', String(secretaria.professores.length)])
-    orientacao = 'Dados de alunos e professores são editados nas páginas de gestão.'
+    linhas.push([t('Alunos cadastrados'), String(secretaria.alunos.length)])
+    linhas.push([t('Professores cadastrados'), String(secretaria.professores.length)])
+    orientacao = t('Dados de alunos e professores são editados nas páginas de gestão.')
   }
 
   return (
     <>
-      <CabecalhoPagina titulo="Meu perfil" />
+      <CabecalhoPagina titulo={t('Meu perfil')} />
       <div className="perfil">
         <section className="perfil__dados">
           <div className="perfil__identidade">
-            <Avatar nome={usuario.nome} tamanho="lg" />
+            <Avatar nome={t(usuario.nome)} tamanho="lg" />
             <div>
-              <h2>{usuario.nome}</h2>
+              <h2>{t(usuario.nome)}</h2>
               <Selo tom="bordo">{ROTULO_PERFIL[usuario.perfil] ?? usuario.perfil}</Selo>
             </div>
           </div>

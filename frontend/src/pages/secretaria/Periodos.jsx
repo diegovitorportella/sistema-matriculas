@@ -6,6 +6,7 @@ import { Carga, CabecalhoPagina, EsqueletoTabela, Progresso, Secao, Selo, Vazio 
 import { Confirmar } from '../../components/ui/Modal.jsx'
 import { useToast } from '../../toast.jsx'
 import { MAX_ALUNOS, MIN_ALUNOS, ROTULO_STATUS_DISCIPLINA, TOM_STATUS_DISCIPLINA, diasAte, formatarData, plural, progressoPeriodo } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 export default function Periodos() {
   const notificar = useToast()
@@ -19,7 +20,7 @@ export default function Periodos() {
     try {
       const r = await periodos.encerrar(encerrando.id)
       setResultado({ semestre: encerrando.semestre, linhas: r })
-      notificar(`Período de ${encerrando.semestre} encerrado. Disciplinas confirmadas ou canceladas.`)
+      notificar(t('Período de {semestre} encerrado. Disciplinas confirmadas ou canceladas.', { semestre: encerrando.semestre }))
       setEncerrando(null)
       await s.recarregar()
     } catch (e) {
@@ -32,11 +33,11 @@ export default function Periodos() {
   return (
     <>
       <CabecalhoPagina
-        titulo="Períodos de matrícula"
-        descricao="Acompanhe os períodos e encerre cada um para confirmar ou cancelar as disciplinas pelo número de inscritos."
+        titulo={t('Períodos de matrícula')}
+        descricao={t('Acompanhe os períodos e encerre cada um para confirmar ou cancelar as disciplinas pelo número de inscritos.')}
         acoes={
           <Link to="/semestre" className="btn btn--secundario">
-            Currículo semestral
+           {t('Currículo semestral')}
           </Link>
         }
       />
@@ -46,37 +47,37 @@ export default function Periodos() {
           <section className="confirmacao" aria-live="polite">
             <div className="confirmacao__topo">
               <div>
-                <h2>Resultado de {resultado.semestre}</h2>
-                <p>Inscritos por disciplina no momento do encerramento. Este total só é exibido agora, ao fechar o período.</p>
+                <h2>{t('Resultado de')} {resultado.semestre}</h2>
+                <p>{t('Inscritos por disciplina no momento do encerramento. Este total só é exibido agora, ao fechar o período.')}</p>
               </div>
               <button type="button" className="btn btn--secundario btn--sm" onClick={() => setResultado(null)}>
-                Dispensar
+               {t('Dispensar')}
               </button>
             </div>
             <div className="tabela-caixa">
               <table className="tabela tabela--cartoes">
                 <thead>
                   <tr>
-                    <th scope="col">Disciplina</th>
-                    <th scope="col">Inscritos</th>
-                    <th scope="col">Situação</th>
+                    <th scope="col">{t('Disciplina')}</th>
+                    <th scope="col">{t('Inscritos')}</th>
+                    <th scope="col">{t('Situação')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {resultado.linhas.map((r) => (
                     <tr key={r.disciplinaId}>
                       <td>
-                        <strong>{r.codigo}</strong> {r.nome}
+                        <strong>{r.codigo}</strong> {t(r.nome)}
                       </td>
-                      <td data-rotulo="Inscritos">
+                      <td data-rotulo={t('Inscritos')}>
                         <div className="inscritos">
                           <span>{r.matriculados}</span>
                           <Progresso valor={r.matriculados} max={MAX_ALUNOS} marca={MIN_ALUNOS} rotulo={`${r.matriculados} inscritos`} tom={r.matriculados >= MIN_ALUNOS ? 'verde' : 'bordo'} />
                         </div>
                       </td>
-                      <td data-rotulo="Situação">
+                      <td data-rotulo={t('Situação')}>
                         <Selo tom={r.status === 'ATIVA' ? 'verde' : 'erro'} icone={r.status === 'ATIVA' ? 'check' : 'x'}>
-                          {r.status === 'ATIVA' ? 'Ativa no próximo semestre' : 'Cancelada, menos de 3 inscritos'}
+                          {r.status === 'ATIVA' ? t('Ativa no próximo semestre') : t('Cancelada, menos de 3 inscritos')}
                         </Selo>
                       </td>
                     </tr>
@@ -90,11 +91,11 @@ export default function Periodos() {
         {s.periodos.length === 0 ? (
           <Vazio
             icone="calendario"
-            titulo="Nenhum período de matrículas"
-            texto="Gere o currículo de um semestre e abra o período para os alunos se matricularem."
+            titulo={t('Nenhum período de matrículas')}
+            texto={t('Gere o currículo de um semestre e abra o período para os alunos se matricularem.')}
             acao={
               <Link to="/semestre" className="btn btn--primario">
-                Ir para o currículo semestral
+               {t('Ir para o currículo semestral')}
               </Link>
             }
           />
@@ -103,22 +104,22 @@ export default function Periodos() {
             {s.periodos.map((p) => {
               const curriculo = s.curriculos.find((c) => c.periodoId === p.id)
               const dias = diasAte(p.fim)
-              let sit = { tom: 'verde', texto: 'Aberto' }
-              if (p.encerrado) sit = { tom: 'neutro', texto: 'Encerrado' }
-              else if (!p.aberto) sit = { tom: 'ambar', texto: 'Fora das datas' }
+              let sit = { tom: 'verde', texto: t('Aberto') }
+              if (p.encerrado) sit = { tom: 'neutro', texto: t('Encerrado') }
+              else if (!p.aberto) sit = { tom: 'ambar', texto: t('Fora das datas') }
               return (
                 <li key={p.id} className="curriculo">
                   <div className="curriculo__linha">
                     <div className="curriculo__bloco">
                       <h2 className="curriculo__semestre">{p.semestre}</h2>
                       <p className="curriculo__meta">
-                        {formatarData(p.inicio)} a {formatarData(p.fim)}.{' '}
-                        {curriculo ? plural(curriculo.disciplinas.length, 'disciplina', 'disciplinas') : 'Sem currículo'}
+                        {formatarData(p.inicio)} {t('a')} {formatarData(p.fim)}.{' '}
+                        {curriculo ? plural(curriculo.disciplinas.length, 'disciplina', 'disciplinas') : t('Sem currículo')}
                       </p>
                       {!p.encerrado && (
                         <div className="curriculo__progresso">
-                          <Progresso valor={Math.round(progressoPeriodo(p.inicio, p.fim) * 100)} max={100} rotulo="Progresso do período" tom="ouro" />
-                          <small>{dias >= 0 ? `Termina em ${plural(dias, 'dia', 'dias')}` : `Prazo vencido há ${plural(-dias, 'dia', 'dias')}`}</small>
+                          <Progresso valor={Math.round(progressoPeriodo(p.inicio, p.fim) * 100)} max={100} rotulo={t('Progresso do período')} tom="ouro" />
+                          <small>{dias >= 0 ? t('Termina em {prazo}', { prazo: plural(dias, 'dia', 'dias') }) : t('Prazo vencido há {prazo}', { prazo: plural(-dias, 'dia', 'dias') })}</small>
                         </div>
                       )}
                     </div>
@@ -126,19 +127,19 @@ export default function Periodos() {
                       <Selo tom={sit.tom}>{sit.texto}</Selo>
                       {!p.encerrado && (
                         <button type="button" className="btn btn--secundario btn--sm" onClick={() => setEncerrando(p)}>
-                          Encerrar período
+                         {t('Encerrar período')}
                         </button>
                       )}
                     </div>
                   </div>
                   {p.encerrado && curriculo && (
                     <div className="curriculo__detalhe">
-                      <h3 className="curriculo__subtitulo">Situação final das disciplinas</h3>
+                      <h3 className="curriculo__subtitulo">{t('Situação final das disciplinas')}</h3>
                       <ul className="lista-simples">
                         {curriculo.disciplinas.map((d) => (
                           <li key={d.id}>
                             <span>
-                              <strong>{d.codigo}</strong> {d.nome}
+                              <strong>{d.codigo}</strong> {t(d.nome)}
                             </span>
                             <Selo tom={TOM_STATUS_DISCIPLINA[d.status]}>{ROTULO_STATUS_DISCIPLINA[d.status]}</Selo>
                           </li>
@@ -152,10 +153,9 @@ export default function Periodos() {
           </ul>
         )}
 
-        <Secao id="limites" titulo="Como acompanhar as turmas">
+        <Secao id="limites" titulo={t('Como acompanhar as turmas')}>
           <p className="secao__texto">
-            Os alunos de cada disciplina aparecem na turma do professor responsável. O total de inscritos por disciplina é mostrado aqui quando você
-            encerra o período, junto com o resultado: confirmada com 3 alunos ou mais, cancelada com menos.
+           {t('Os alunos de cada disciplina aparecem na turma do professor responsável. O total de inscritos por disciplina é mostrado aqui quando você encerra o período, junto com o resultado: confirmada com 3 alunos ou mais, cancelada com menos.')}
           </p>
         </Secao>
       </Carga>
@@ -166,16 +166,16 @@ export default function Periodos() {
         onConfirmar={encerrar}
         ocupado={ocupado}
         perigo
-        titulo={encerrando ? `Encerrar período de ${encerrando.semestre}` : ''}
-        rotuloConfirmar="Encerrar período"
+        titulo={encerrando ? t('Encerrar período de {semestre}', { semestre: encerrando.semestre }) : ''}
+        rotuloConfirmar={t('Encerrar período')}
         texto={
           <>
-            <p>As matrículas e os cancelamentos deste semestre deixam de ser aceitos. Cada disciplina do currículo será avaliada:</p>
+            <p>{t('As matrículas e os cancelamentos deste semestre deixam de ser aceitos. Cada disciplina do currículo será avaliada:')}</p>
             <ul className="regras">
-              <li>{MIN_ALUNOS} inscritos ou mais: a disciplina fica ativa no semestre seguinte.</li>
-              <li>Menos de {MIN_ALUNOS} inscritos: a disciplina é cancelada.</li>
+              <li>{MIN_ALUNOS} {t('inscritos ou mais: a disciplina fica ativa no semestre seguinte.')}</li>
+              <li>{t('Menos de')} {MIN_ALUNOS} {t('inscritos: a disciplina é cancelada.')}</li>
             </ul>
-            <p>Esta ação não pode ser desfeita.</p>
+            <p>{t('Esta ação não pode ser desfeita.')}</p>
           </>
         }
       />

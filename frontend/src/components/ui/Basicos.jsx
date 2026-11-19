@@ -1,5 +1,6 @@
 import { iniciais } from '../../util'
 import Icone from './Icone.jsx'
+import { t } from '../../i18n/index.jsx'
 
 /** Selo de situação. Sempre acompanha um texto (nunca só cor). */
 export function Selo({ tom = 'neutro', icone, children }) {
@@ -99,7 +100,7 @@ export function Esqueleto({ linhas = 3, altura }) {
 
 export function EsqueletoCartas({ n = 6 }) {
   return (
-    <div className="grade-cartas" aria-busy="true" aria-label="Carregando">
+    <div className="grade-cartas" aria-busy="true" aria-label={t('Carregando')}>
       {Array.from({ length: n }, (_, i) => (
         <div key={i} className="carta carta--esqueleto">
           <div className="esqueleto" style={{ height: '9rem' }} />
@@ -114,7 +115,7 @@ export function EsqueletoCartas({ n = 6 }) {
 
 export function EsqueletoTabela({ linhas = 6 }) {
   return (
-    <div className="tabela-caixa" aria-busy="true" aria-label="Carregando">
+    <div className="tabela-caixa" aria-busy="true" aria-label={t('Carregando')}>
       {Array.from({ length: linhas }, (_, i) => (
         <div key={i} className="tabela-esqueleto">
           <span className="esqueleto__linha" />
@@ -132,11 +133,11 @@ export function Carga({ carregando, erro, onTentar, esqueleto, children }) {
       <div className="erro-painel" role="alert">
         <Icone nome="alerta" />
         <div>
-          <p className="erro-painel__titulo">Não foi possível carregar esta página.</p>
+          <p className="erro-painel__titulo">{t('Não foi possível carregar esta página.')}</p>
           <p>{erro}</p>
           {onTentar && (
             <button type="button" className="btn btn--secundario btn--sm" onClick={onTentar}>
-              Tentar novamente
+             {t('Tentar novamente')}
             </button>
           )}
         </div>

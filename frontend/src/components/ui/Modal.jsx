@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import Icone from './Icone.jsx'
+import { t } from '../../i18n/index.jsx'
 
 /** Diálogo modal sobre <dialog> nativo: foco preso, Esc fecha, clique no fundo fecha. */
 export default function Modal({ aberto, onFechar, titulo, children, rodape, largura = 'md' }) {
@@ -27,7 +28,7 @@ export default function Modal({ aberto, onFechar, titulo, children, rodape, larg
         <div className="modal__corpo">
           <header className="modal__topo">
             <h2 id={idTitulo}>{titulo}</h2>
-            <button type="button" className="btn-icone" onClick={onFechar} aria-label="Fechar">
+            <button type="button" className="btn-icone" onClick={onFechar} aria-label={t('Fechar')}>
               <Icone nome="x" />
             </button>
           </header>
@@ -50,7 +51,7 @@ export function Confirmar({ aberto, onFechar, onConfirmar, titulo, texto, rotulo
       rodape={
         <>
           <button type="button" className="btn btn--secundario" onClick={onFechar} disabled={ocupado}>
-            Voltar
+            {t('Voltar')}
           </button>
           <button
             type="button"
@@ -58,7 +59,7 @@ export function Confirmar({ aberto, onFechar, onConfirmar, titulo, texto, rotulo
             onClick={onConfirmar}
             disabled={ocupado}
           >
-            {ocupado ? 'Aguarde…' : rotuloConfirmar}
+            {ocupado ? t('Aguarde…') : rotuloConfirmar}
           </button>
         </>
       }

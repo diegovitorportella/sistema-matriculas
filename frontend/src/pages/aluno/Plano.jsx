@@ -8,6 +8,7 @@ import Icone from '../../components/ui/Icone.jsx'
 import Modal, { Confirmar } from '../../components/ui/Modal.jsx'
 import { useToast } from '../../toast.jsx'
 import { LIMITES, ROTULO_TIPO, formatarData, plural } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 const GRUPOS = [
   { tipo: 'OBRIGATORIA', titulo: 'Primeira opção', texto: 'Quatro disciplinas que você pretende cursar.', classe: 'primeira' },
@@ -45,7 +46,7 @@ export default function Plano() {
     setCancelandoOcupado(true)
     try {
       await aluno.cancelar(cancelando)
-      notificar(`Matrícula em ${cancelando.disciplinaCodigo} cancelada. A vaga foi liberada.`)
+      notificar(t('Matrícula em {codigo} cancelada. A vaga foi liberada.', { codigo: cancelando.disciplinaCodigo }))
       setCancelando(null)
     } catch (e) {
       notificar(e.message, 'erro')
@@ -65,20 +66,20 @@ export default function Plano() {
   return (
     <>
       <CabecalhoPagina
-        titulo="Plano de matrícula"
+        titulo={t('Plano de matrícula')}
         descricao={
           periodo
-            ? `Semestre ${periodo.semestre}. Monte o plano com 4 disciplinas de primeira opção e 2 alternativas, revise e confirme até ${formatarData(periodo.fim)}.`
-            : 'O plano de matrícula fica disponível durante o período de matrículas.'
+            ? t('Semestre {semestre}. Monte o plano com 4 disciplinas de primeira opção e 2 alternativas, revise e confirme até {data}.', { semestre: periodo.semestre, data: formatarData(periodo.fim) })
+            : t('O plano de matrícula fica disponível durante o período de matrículas.')
         }
         acoes={
           periodo && (
             <>
               <Link to="/catalogo" className="btn btn--secundario">
-                Adicionar do catálogo
+               {t('Adicionar do catálogo')}
               </Link>
               <button type="button" className="btn btn--primario" disabled={plano.length === 0} onClick={() => setRevisando(true)}>
-                Revisar e confirmar
+               {t('Revisar e confirmar')}
               </button>
             </>
           )
@@ -87,7 +88,7 @@ export default function Plano() {
 
       <Carga carregando={carregando} erro={erro} onTentar={recarregar}>
         {!periodo ? (
-          <Vazio icone="calendario" titulo="Fora do período de matrículas" texto="Quando a secretaria abrir o período, você poderá montar seu plano." />
+          <Vazio icone="calendario" titulo={t('Fora do período de matrículas')} texto={t('Quando a secretaria abrir o período, você poderá montar seu plano.')} />
         ) : (
           <>
             {resultado && (
@@ -97,18 +98,18 @@ export default function Plano() {
                   <div>
                     <h2>
                       {falhas.length === 0
-                        ? 'Matrícula confirmada'
+                        ? t('Matrícula confirmada')
                         : aprovados.length > 0
-                          ? 'Matrícula confirmada em parte'
-                          : 'Não foi possível confirmar'}
+                          ? t('Matrícula confirmada em parte')
+                          : t('Não foi possível confirmar')}
                     </h2>
                     <p>
-                      {plural(aprovados.length, 'disciplina matriculada', 'disciplinas matriculadas')}
-                      {falhas.length > 0 && `, ${plural(falhas.length, 'recusada', 'recusadas')} pelo sistema`}.
-                      {aprovados.length > 0 && ' O sistema de cobranças foi notificado.'}
+                      {plural(aprovados.length, t('disciplina matriculada'), t('disciplinas matriculadas'))}
+                      {falhas.length > 0 && t(', {n} pelo sistema', { n: plural(falhas.length, 'recusada', 'recusadas') })}.
+                      {aprovados.length > 0 && t('O sistema de cobranças foi notificado.')}
                     </p>
                   </div>
-                  <button type="button" className="btn-icone" aria-label="Dispensar resultado" onClick={() => setResultado(null)}>
+                  <button type="button" className="btn-icone" aria-label={t('Dispensar resultado')} onClick={() => setResultado(null)}>
                     <Icone nome="x" />
                   </button>
                 </div>
@@ -130,9 +131,9 @@ export default function Plano() {
                 </ul>
                 <div className="confirmacao__acoes">
                   <Link to="/minhas-matriculas" className="btn btn--primario btn--sm">
-                    Ver minhas matrículas
+                   {t('Ver minhas matrículas')}
                   </Link>
-                  {falhas.length > 0 && <span className="campo__ajuda">As recusadas continuam no plano para você ajustar.</span>}
+                  {falhas.length > 0 && <span className="campo__ajuda">{t('As recusadas continuam no plano para você ajustar.')}</span>}
                 </div>
               </section>
             )}
@@ -144,14 +145,14 @@ export default function Plano() {
                 const limite = LIMITES[g.tipo]
                 const livres = Math.max(0, limite - confirmadas.length - rascunhos.length)
                 return (
-                  <section key={g.tipo} className={`grupo grupo--${g.classe}`} aria-label={g.titulo}>
+                  <section key={g.tipo} className={`grupo grupo--${g.classe}`} aria-label={t(g.titulo)}>
                     <div className="grupo__topo">
-                      <h2>{g.titulo}</h2>
+                      <h2>{t(g.titulo)}</h2>
                       <span className="grupo__conta">
-                        {confirmadas.length + rascunhos.length} de {limite}
+                        {t('{n} de {limite}', { n: confirmadas.length + rascunhos.length, limite })}
                       </span>
                     </div>
-                    <p className="grupo__texto">{g.texto}</p>
+                    <p className="grupo__texto">{t(g.texto)}</p>
                     <ul className="vagas">
                       {confirmadas.map((m) => {
                         const d = disciplinaDe(m.disciplinaId) ?? { id: m.disciplinaId, nome: m.disciplinaNome, codigo: m.disciplinaCodigo }
@@ -160,12 +161,12 @@ export default function Plano() {
                             <Foto id={fotoDaDisciplina(d)} className="vaga__foto" posicao="center 30%" />
                             <div className="vaga__corpo">
                               <Selo tom="verde" icone="check">
-                                Matriculado
+                               {t('Matriculado')}
                               </Selo>
                               <p className="vaga__codigo">{m.disciplinaCodigo}</p>
-                              <p className="vaga__nome">{m.disciplinaNome}</p>
+                              <p className="vaga__nome">{t(m.disciplinaNome)}</p>
                               <button type="button" className="btn-texto vaga__acao" onClick={() => setCancelando(m)}>
-                                Cancelar matrícula
+                               {t('Cancelar matrícula')}
                               </button>
                             </div>
                           </li>
@@ -178,11 +179,11 @@ export default function Plano() {
                           <li key={p.disciplinaId} className="vaga vaga--rascunho">
                             <Foto id={fotoDaDisciplina(d)} className="vaga__foto" posicao="center 30%" />
                             <div className="vaga__corpo">
-                              <Selo tom="ouro">Aguardando confirmação</Selo>
+                              <Selo tom="ouro">{t('Aguardando confirmação')}</Selo>
                               <p className="vaga__codigo">{d.codigo}</p>
-                              <p className="vaga__nome">{d.nome}</p>
+                              <p className="vaga__nome">{t(d.nome)}</p>
                               <button type="button" className="btn-texto vaga__acao" onClick={() => aluno.remover(d.id)}>
-                                Remover do plano
+                               {t('Remover do plano')}
                               </button>
                             </div>
                           </li>
@@ -192,7 +193,7 @@ export default function Plano() {
                         <li key={`livre-${i}`} className="vaga vaga--livre">
                           <Link to="/catalogo" className="vaga__livre-link">
                             <Icone nome="mais" />
-                            <span>Escolher no catálogo</span>
+                            <span>{t('Escolher no catálogo')}</span>
                           </Link>
                         </li>
                       ))}
@@ -204,16 +205,17 @@ export default function Plano() {
 
             <aside className="resumo-plano">
               <p>
-                <strong>{plural(plano.length, 'disciplina', 'disciplinas')} aguardando confirmação</strong>
-                {plano.length > 0 && `, ${creditosPlano} créditos`}. Depois de confirmada, a matrícula notifica o sistema de cobranças e só pode ser desfeita
-                com o cancelamento até {formatarData(periodo.fim)}.
+                <strong>{plural(plano.length, 'disciplina aguardando confirmação', 'disciplinas aguardando confirmação')}</strong>
+                {plano.length > 0 && t(', {n} créditos', { n: creditosPlano })}.{' '}
+                {t('Depois de confirmada, a matrícula notifica o sistema de cobranças e só pode ser desfeita com o cancelamento até {data}.', { data: formatarData(periodo.fim) })}
               </p>
             </aside>
 
             {minhas.length === 0 && plano.length === 0 && (
-              <Secao id="comecar" titulo="Por onde começar">
+              <Secao id="comecar" titulo={t('Por onde começar')}>
                 <p className="secao__texto">
-                  Abra o <Link to="/catalogo">catálogo de disciplinas</Link>, escolha as que quer cursar e volte aqui para revisar e confirmar.
+                  {t('Abra o')} <Link to="/catalogo">{t('catálogo de disciplinas')}</Link>
+                  {t(', escolha as que quer cursar e volte aqui para revisar e confirmar.')}
                 </p>
               </Secao>
             )}
@@ -224,30 +226,30 @@ export default function Plano() {
       <Modal
         aberto={revisando}
         onFechar={() => !enviando && setRevisando(false)}
-        titulo="Revisar matrícula"
+        titulo={t('Revisar matrícula')}
         largura="lg"
         rodape={
           <>
             <button type="button" className="btn btn--secundario" onClick={() => setRevisando(false)} disabled={enviando}>
-              Voltar ao plano
+             {t('Voltar ao plano')}
             </button>
             <button type="button" className="btn btn--primario" onClick={confirmar} disabled={enviando || plano.length === 0}>
-              {enviando ? 'Confirmando…' : `Confirmar ${plural(plano.length, 'disciplina', 'disciplinas')}`}
+              {enviando ? t('Confirmando…') : t('Confirmar {n}', { n: plural(plano.length, 'disciplina', 'disciplinas') })}
             </button>
           </>
         }
       >
         <p className="modal__texto">
-          Confira as disciplinas e o tipo de cada uma. Se uma delas estiver lotada ou fora das regras, o sistema recusa só ela e mantém as demais.
+         {t('Confira as disciplinas e o tipo de cada uma. Se uma delas estiver lotada ou fora das regras, o sistema recusa só ela e mantém as demais.')}
         </p>
         <div className="tabela-caixa">
           <table className="tabela tabela--cartoes">
             <thead>
               <tr>
-                <th scope="col">Disciplina</th>
-                <th scope="col">Professor</th>
-                <th scope="col">Créditos</th>
-                <th scope="col">Tipo</th>
+                <th scope="col">{t('Disciplina')}</th>
+                <th scope="col">{t('Professor')}</th>
+                <th scope="col">{t('Créditos')}</th>
+                <th scope="col">{t('Tipo')}</th>
               </tr>
             </thead>
             <tbody>
@@ -256,12 +258,12 @@ export default function Plano() {
                 return (
                   <tr key={p.disciplinaId}>
                     <td>
-                      <strong>{d?.codigo}</strong> {d?.nome}
+                      <strong>{d?.codigo}</strong> {t(d?.nome)}
                     </td>
-                    <td data-rotulo="Professor">{d?.professorNome || 'A definir'}</td>
-                    <td data-rotulo="Créditos">{d?.creditos}</td>
-                    <td data-rotulo="Tipo">
-                      <button type="button" className="btn btn--secundario btn--sm" onClick={() => trocar(p.disciplinaId)} disabled={enviando} title="Alternar entre primeira opção e alternativa">
+                    <td data-rotulo={t('Professor')}>{d?.professorNome || t('A definir')}</td>
+                    <td data-rotulo={t('Créditos')}>{d?.creditos}</td>
+                    <td data-rotulo={t('Tipo')}>
+                      <button type="button" className="btn btn--secundario btn--sm" onClick={() => trocar(p.disciplinaId)} disabled={enviando} title={t('Alternar entre primeira opção e alternativa')}>
                         {ROTULO_TIPO[p.tipo]}
                       </button>
                     </td>
@@ -271,7 +273,7 @@ export default function Plano() {
             </tbody>
           </table>
         </div>
-        <p className="campo__ajuda">Total do plano: {creditosPlano} créditos.</p>
+        <p className="campo__ajuda">{t('Total do plano: {n} créditos.', { n: creditosPlano })}</p>
       </Modal>
 
       <Confirmar
@@ -280,13 +282,13 @@ export default function Plano() {
         onConfirmar={cancelarMatricula}
         ocupado={cancelandoOcupado}
         perigo
-        titulo="Cancelar matrícula"
-        rotuloConfirmar="Cancelar matrícula"
+        titulo={t('Cancelar matrícula')}
+        rotuloConfirmar={t('Cancelar matrícula')}
         texto={
           cancelando && (
             <p>
-              Cancelar a matrícula em <strong>{cancelando.disciplinaCodigo}</strong> ({cancelando.disciplinaNome})? A vaga será liberada e o
-              sistema de cobranças será atualizado.
+              {t('Cancelar a matrícula em')} <strong>{cancelando.disciplinaCodigo}</strong> ({t(cancelando.disciplinaNome)})?{' '}
+              {t('A vaga será liberada e o sistema de cobranças será atualizado.')}
             </p>
           )
         }

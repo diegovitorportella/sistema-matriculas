@@ -6,6 +6,7 @@ import { contem, plural } from '../util'
 import { Carga, CabecalhoPagina, EsqueletoTabela, Vazio } from './ui/Basicos.jsx'
 import Icone from './ui/Icone.jsx'
 import Modal, { Confirmar } from './ui/Modal.jsx'
+import { idiomaAtual, t } from '../i18n/index.jsx'
 
 /**
  * Página de gestão (lista, busca, filtros, cadastro e edição em modal).
@@ -26,7 +27,7 @@ export default function GestaoPage({
   campos,
   buscaCampos,
   filtros = [],
-  rotuloItem = (i) => i.nome,
+  rotuloItem = (i) => t(i.nome),
 }) {
   const notificar = useToast()
   const secretaria = useSecretaria()
@@ -42,6 +43,9 @@ export default function GestaoPage({
 
   const novo = genero === 'a' ? 'Nova' : 'Novo'
   const artigoDe = genero === 'a' ? 'da' : 'do'
+  // Frases em português montadas com gênero; cada uma é traduzida inteira (ex.: 'Nova disciplina').
+  const rotuloNovo = `${novo} ${singular}`
+  const pluralPt = singular === 'curso' ? 'cursos' : singular === 'professor' ? 'professores' : `${singular}s`
 
   const filtrados = itens.filter(
     (i) => contem(i, q, buscaCampos) && filtros.every((f) => !selecionados[f.rotulo] || f.valor(i) === selecionados[f.rotulo]),
@@ -84,7 +88,7 @@ export default function GestaoPage({
     setRemovendoOcupado(true)
     try {
       await servico.remover(removendo.id)
-      notificar(`${singular[0].toUpperCase()}${singular.slice(1)} removid${genero}.`)
+      notificar(t(`${singular[0].toUpperCase()}${singular.slice(1)} removid${genero}.`))
       setRemovendo(null)
       await secretaria.recarregar()
     } catch (err) {
@@ -103,7 +107,7 @@ export default function GestaoPage({
         descricao={descricao}
         acoes={
           <button type="button" className="btn btn--primario" onClick={abrirNovo}>
-            <Icone nome="mais" tamanho={18} /> {novo} {singular}
+            <Icone nome="mais" tamanho={18} /> {t(rotuloNovo)}
           </button>
         }
       />
@@ -111,11 +115,11 @@ export default function GestaoPage({
       <Carga carregando={secretaria.carregando} erro={secretaria.erro} onTentar={secretaria.recarregar} esqueleto={<EsqueletoTabela />}>
         {itens.length === 0 ? (
           <Vazio
-            titulo={`Nenhum${genero === 'a' ? 'a' : ''} ${singular} cadastrad${genero}`}
-            texto={`Use “${novo} ${singular}” para começar.`}
+            titulo={t(`Nenhum${genero === 'a' ? 'a' : ''} ${singular} cadastrad${genero}`)}
+            texto={t('Use “{acao}” para começar.', { acao: t(rotuloNovo) })}
             acao={
               <button type="button" className="btn btn--primario" onClick={abrirNovo}>
-                {novo} {singular}
+                {t(rotuloNovo)}
               </button>
             }
           />
@@ -125,18 +129,18 @@ export default function GestaoPage({
               <div className="barra-ferramentas__busca">
                 <Icone nome="busca" tamanho={18} className="busca__icone" />
                 <label className="so-leitor" htmlFor="filtro-gestao">
-                  Filtrar {titulo.toLowerCase()}
+                  {t('Filtrar {titulo}', { titulo: String(titulo).toLowerCase() })}
                 </label>
                 <input
                   id="filtro-gestao"
                   type="search"
-                  placeholder="Filtrar por nome ou código"
+                  placeholder={t('Filtrar por nome ou código')}
                   value={q}
                   onChange={(e) => setParams(e.target.value ? { q: e.target.value } : {}, { replace: true })}
                 />
               </div>
               {filtros.map((f) => {
-                const valores = [...new Set(itens.map(f.valor))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+                const valores = [...new Set(itens.map(f.valor))].sort((a, b) => a.localeCompare(b, idiomaAtual() === 'en' ? 'en' : 'pt-BR'))
                 return (
                   <label key={f.rotulo} className="barra-ferramentas__filtro">
                     <span className="so-leitor">{f.rotulo}</span>
@@ -145,7 +149,7 @@ export default function GestaoPage({
                       value={selecionados[f.rotulo] ?? ''}
                       onChange={(e) => setSelecionados({ ...selecionados, [f.rotulo]: e.target.value })}
                     >
-                      <option value="">{f.rotulo}: todos</option>
+                      <option value="">{t('{rotulo}: todos', { rotulo: f.rotulo })}</option>
                       {valores.map((v) => (
                         <option key={v} value={v}>
                           {v}
@@ -167,7 +171,7 @@ export default function GestaoPage({
                       </th>
                     ))}
                     <th scope="col" className="tabela__acoes-cab">
-                      Ações
+                     {t('Ações')}
                     </th>
                   </tr>
                 </thead>
@@ -179,11 +183,11 @@ export default function GestaoPage({
                       ))}
                       <td className="tabela__celula-acoes">
                         <div className="tabela__acoes">
-                          <button type="button" className="btn-texto" onClick={() => abrirEdicao(item)} aria-label={`Editar ${rotuloItem(item)}`}>
-                            Editar
+                          <button type="button" className="btn-texto" onClick={() => abrirEdicao(item)} aria-label={t('Editar {item}', { item: rotuloItem(item) })}>
+                           {t('Editar')}
                           </button>
-                          <button type="button" className="btn-texto btn-texto--perigo" onClick={() => setRemovendo(item)} aria-label={`Remover ${rotuloItem(item)}`}>
-                            Remover
+                          <button type="button" className="btn-texto btn-texto--perigo" onClick={() => setRemovendo(item)} aria-label={t('Remover {item}', { item: rotuloItem(item) })}>
+                           {t('Remover')}
                           </button>
                         </div>
                       </td>
@@ -191,13 +195,13 @@ export default function GestaoPage({
                   ))}
                   {filtrados.length === 0 && (
                     <tr>
-                      <td colSpan={colunas.length + 1}>Nenhum resultado para os filtros atuais.</td>
+                      <td colSpan={colunas.length + 1}>{t('Nenhum resultado para os filtros atuais.')}</td>
                     </tr>
                   )}
                 </tbody>
               </table>
               <p className="tabela__rodape">
-                {plural(filtrados.length, singular, singular === 'curso' ? 'cursos' : `${singular}s`)} {filtrados.length !== itens.length && `de ${itens.length}`}
+                {plural(filtrados.length, singular, pluralPt)} {filtrados.length !== itens.length && t('de {total}', { total: itens.length })}
               </p>
             </div>
           </>
@@ -207,14 +211,14 @@ export default function GestaoPage({
       <Modal
         aberto={Boolean(formulario)}
         onFechar={() => !salvando && setFormulario(null)}
-        titulo={formulario?.item ? `Editar ${singular}` : `${novo} ${singular}`}
+        titulo={formulario?.item ? t(`Editar ${singular}`) : t(rotuloNovo)}
         rodape={
           <>
             <button type="button" className="btn btn--secundario" onClick={() => setFormulario(null)} disabled={salvando}>
-              Cancelar
+             {t('Cancelar')}
             </button>
             <button type="submit" form="form-gestao" className="btn btn--primario" disabled={salvando}>
-              {salvando ? 'Salvando…' : 'Salvar'}
+              {salvando ? t('Salvando…') : t('Salvar')}
             </button>
           </>
         }
@@ -231,10 +235,10 @@ export default function GestaoPage({
                       value={formulario.valores[c.nome] ?? ''}
                       onChange={(e) => setFormulario({ ...formulario, valores: { ...formulario.valores, [c.nome]: e.target.value } })}
                     >
-                      <option value="">Nenhum</option>
+                      <option value="">{t('Nenhum')}</option>
                       {opcoesDo(c).map((o) => (
                         <option key={o.id} value={o.id}>
-                          {o[c.opcoes.rotulo]}
+                          {t(o[c.opcoes.rotulo])}
                         </option>
                       ))}
                     </select>
@@ -248,7 +252,7 @@ export default function GestaoPage({
                       onChange={(e) => setFormulario({ ...formulario, valores: { ...formulario.valores, [c.nome]: e.target.value } })}
                     />
                   )}
-                  {c.senha && formulario.item && <span className="campo__ajuda">Deixe em branco para manter a senha atual.</span>}
+                  {c.senha && formulario.item && <span className="campo__ajuda">{t('Deixe em branco para manter a senha atual.')}</span>}
                 </label>
               ))}
           </form>
@@ -261,12 +265,12 @@ export default function GestaoPage({
         onConfirmar={remover}
         ocupado={removendoOcupado}
         perigo
-        titulo={`Remover ${singular}`}
-        rotuloConfirmar="Remover"
+        titulo={t(`Remover ${singular}`)}
+        rotuloConfirmar={t('Remover')}
         texto={
           removendo && (
             <p>
-              Remover {artigoDe === 'da' ? 'a' : 'o'} {singular} <strong>{rotuloItem(removendo)}</strong>? Esta ação não pode ser desfeita.
+              {t(`Remover ${artigoDe === 'da' ? 'a' : 'o'} ${singular}`)} <strong>{rotuloItem(removendo)}</strong>? {t('Esta ação não pode ser desfeita.')}
             </p>
           )
         }

@@ -2,11 +2,13 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { professores } from '../services'
 import { MAX_ALUNOS, MIN_ALUNOS, contem, plural } from '../util'
 import { ShellDados } from './ShellDados.js'
+import { t, useIdioma } from '../i18n/index.jsx'
 
 const ProfessorContext = createContext(null)
 export const useProfessor = () => useContext(ProfessorContext)
 
 export function ProfessorProvider({ children }) {
+  const { idioma } = useIdioma() // avisos e busca são recalculados ao trocar de idioma
   const [estado, setEstado] = useState({ carregando: true, erro: null, disciplinas: [], alunos: {} })
 
   const carregar = useCallback(async () => {
@@ -39,30 +41,30 @@ export function ProfessorProvider({ children }) {
     for (const d of disciplinas) {
       const n = alunos[d.id]?.length ?? 0
       if (d.status === 'CANCELADA') {
-        lista.push({ id: `c-${d.id}`, tom: 'ambar', titulo: `${d.codigo} foi cancelada`, texto: 'A disciplina terminou o período de matrículas com menos de 3 alunos.', to: `/turmas/${d.id}` })
+        lista.push({ id: `c-${d.id}`, tom: 'ambar', titulo: t('{codigo} foi cancelada', { codigo: d.codigo }), texto: t('A disciplina terminou o período de matrículas com menos de 3 alunos.'), to: `/turmas/${d.id}` })
       } else if (d.status === 'ABERTA' && n < MIN_ALUNOS) {
-        lista.push({ id: `m-${d.id}`, tom: 'info', titulo: `${d.codigo} tem ${plural(n, 'aluno', 'alunos')}`, texto: `São necessários ${MIN_ALUNOS} para confirmar a disciplina.`, to: `/turmas/${d.id}` })
+        lista.push({ id: `m-${d.id}`, tom: 'info', titulo: t('{codigo} tem {n}', { codigo: d.codigo, n: plural(n, 'aluno', 'alunos') }), texto: t('São necessários {min} para confirmar a disciplina.', { min: MIN_ALUNOS }), to: `/turmas/${d.id}` })
       } else if (n >= MAX_ALUNOS) {
-        lista.push({ id: `l-${d.id}`, tom: 'verde', titulo: `${d.codigo} atingiu ${MAX_ALUNOS} alunos`, texto: 'As matrículas dessa disciplina estão encerradas.', to: `/turmas/${d.id}` })
+        lista.push({ id: `l-${d.id}`, tom: 'verde', titulo: t('{codigo} atingiu {max} alunos', { codigo: d.codigo, max: MAX_ALUNOS }), texto: t('As matrículas dessa disciplina estão encerradas.'), to: `/turmas/${d.id}` })
       }
     }
     return lista
-  }, [disciplinas, alunos])
+  }, [disciplinas, alunos, idioma])
 
   const buscar = useCallback(
     (termo) => {
       const resultados = disciplinas
         .filter((d) => contem(d, termo, ['codigo', 'nome']))
         .slice(0, 4)
-        .map((d) => ({ grupo: 'Minhas disciplinas', titulo: `${d.codigo} ${d.nome}`, to: `/turmas/${d.id}` }))
+        .map((d) => ({ grupo: t('Minhas disciplinas'), titulo: `${d.codigo} ${t(d.nome)}`, to: `/turmas/${d.id}` }))
       for (const d of disciplinas) {
         for (const a of alunos[d.id] ?? []) {
           if (resultados.length >= 8) break
           if (contem(a, termo, ['nome', 'matricula'])) {
             resultados.push({
-              grupo: 'Alunos',
+              grupo: t('Alunos'),
               titulo: a.nome,
-              subtitulo: `${d.codigo}, matrícula ${a.matricula}`,
+              subtitulo: t('{codigo}, matrícula {matricula}', { codigo: d.codigo, matricula: a.matricula }),
               to: `/turmas/${d.id}?q=${encodeURIComponent(a.nome)}`,
             })
           }
@@ -70,7 +72,7 @@ export function ProfessorProvider({ children }) {
       }
       return resultados
     },
-    [disciplinas, alunos],
+    [disciplinas, alunos, idioma],
   )
 
   const valor = useMemo(() => ({ ...estado, totalAlunos, recarregar: carregar }), [estado, totalAlunos, carregar])

@@ -7,6 +7,7 @@ import { Rosca } from '../../components/ui/Graficos.jsx'
 import Hero from '../../components/ui/Hero.jsx'
 import Icone from '../../components/ui/Icone.jsx'
 import { diasAte, formatarData, plural, primeiroNome, progressoPeriodo } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 const ATALHOS = [
   { to: '/semestre', icone: 'calendario', titulo: 'Montar o currículo do semestre', texto: 'Escolha as disciplinas ofertadas.' },
@@ -29,69 +30,69 @@ export default function SecretariaInicio() {
         foto="secretaria"
         posicao="center 62%"
         tamanho="sm"
-        titulo={`Secretaria acadêmica`}
+        titulo={t('Secretaria acadêmica')}
         acoes={
           <Link to="/semestre" className="btn btn--ouro">
-            Currículo semestral
+            {t('Currículo semestral')}
           </Link>
         }
       >
-        Olá, {primeiroNome(usuario.nome)}. Acompanhe cadastros, períodos de matrícula e a situação das disciplinas.
+        {t('Olá, {nome}.', { nome: primeiroNome(t(usuario.nome)) })} {t('Acompanhe cadastros, períodos de matrícula e a situação das disciplinas.')}
       </Hero>
 
       <div className="pagina-corpo">
         <Carga carregando={s.carregando} erro={s.erro} onTentar={s.recarregar}>
           <Estatisticas
             itens={[
-              { valor: s.alunos.length, rotulo: 'Alunos' },
-              { valor: s.professores.length, rotulo: 'Professores' },
-              { valor: s.disciplinas.length, rotulo: 'Disciplinas' },
-              { valor: s.cursos.length, rotulo: 'Cursos' },
+              { valor: s.alunos.length, rotulo: t('Alunos') },
+              { valor: s.professores.length, rotulo: t('Professores') },
+              { valor: s.disciplinas.length, rotulo: t('Disciplinas') },
+              { valor: s.cursos.length, rotulo: t('Cursos') },
             ]}
           />
 
           <div className="duas-colunas">
-            <Secao id="periodo" titulo="Período de matrículas">
+            <Secao id="periodo" titulo={t('Período de matrículas')}>
               {p ? (
                 <div className="painel-periodo">
                   <p className="painel-periodo__semestre">{p.semestre}</p>
-                  <Progresso valor={Math.round(progressoPeriodo(p.inicio, p.fim) * 100)} max={100} rotulo="Progresso do período" tom="ouro" />
+                  <Progresso valor={Math.round(progressoPeriodo(p.inicio, p.fim) * 100)} max={100} rotulo={t('Progresso do período')} tom="ouro" />
                   <div className="linha-tempo">
                     <span>{formatarData(p.inicio)}</span>
                     <span>{formatarData(p.fim)}</span>
                   </div>
                   <p className="nota">
-                    Termina em {plural(diasAte(p.fim), 'dia', 'dias')}. Ao encerrar, disciplinas com menos de 3 alunos são canceladas.
+                    {t('Termina em {prazo}.', { prazo: plural(diasAte(p.fim), 'dia', 'dias') })} {t('Ao encerrar, disciplinas com menos de 3 alunos são canceladas.')}
                   </p>
                   <Link to="/matriculas" className="btn btn--primario btn--sm">
-                    Gerenciar período
+                    {t('Gerenciar período')}
                   </Link>
                 </div>
               ) : (
                 <Vazio
                   icone="calendario"
-                  titulo="Nenhum período aberto"
-                  texto="Gere o currículo do semestre e abra o período para os alunos se matricularem."
+                  titulo={t('Nenhum período aberto')}
+                  texto={t('Gere o currículo do semestre e abra o período para os alunos se matricularem.')}
                   acao={
                     <Link to="/semestre" className="btn btn--primario">
-                      Abrir período
+                      {t('Abrir período')}
                     </Link>
                   }
                 />
               )}
             </Secao>
 
-            <Secao id="situacao" titulo="Situação das disciplinas">
+            <Secao id="situacao" titulo={t('Situação das disciplinas')}>
               {s.disciplinas.length === 0 ? (
-                <Vazio titulo="Sem disciplinas" texto="Cadastre disciplinas para acompanhar a situação." />
+                <Vazio titulo={t('Sem disciplinas')} texto={t('Cadastre disciplinas para acompanhar a situação.')} />
               ) : (
                 <Rosca
                   centro={s.disciplinas.length}
-                  rotuloCentro="disciplinas"
+                  rotuloCentro={t('disciplinas')}
                   dados={[
-                    { rotulo: 'Inscrições abertas', valor: porStatus('ABERTA'), cor: 'var(--ouro-500)' },
-                    { rotulo: 'Confirmadas', valor: porStatus('ATIVA'), cor: 'var(--verde-600)' },
-                    { rotulo: 'Canceladas', valor: porStatus('CANCELADA'), cor: 'var(--erro-700)' },
+                    { rotulo: t('Inscrições abertas'), valor: porStatus('ABERTA'), cor: 'var(--ouro-500)' },
+                    { rotulo: t('Confirmadas'), valor: porStatus('ATIVA'), cor: 'var(--verde-600)' },
+                    { rotulo: t('Canceladas'), valor: porStatus('CANCELADA'), cor: 'var(--erro-700)' },
                   ]}
                 />
               )}
@@ -99,9 +100,9 @@ export default function SecretariaInicio() {
           </div>
 
           <div className="duas-colunas">
-            <Secao id="avisos" titulo="Pontos de atenção">
+            <Secao id="avisos" titulo={t('Pontos de atenção')}>
               {avisos.length === 0 ? (
-                <p className="secao__texto">Nenhum ponto de atenção no momento.</p>
+                <p className="secao__texto">{t('Nenhum ponto de atenção no momento.')}</p>
               ) : (
                 <ul className="lista-simples">
                   {avisos.map((a) => (
@@ -112,7 +113,7 @@ export default function SecretariaInicio() {
                       </span>
                       {a.to && (
                         <Link to={a.to} className="btn-texto">
-                          Abrir
+                          {t('Abrir')}
                         </Link>
                       )}
                     </li>
@@ -121,15 +122,15 @@ export default function SecretariaInicio() {
               )}
             </Secao>
 
-            <Secao id="atalhos" titulo="Atalhos">
+            <Secao id="atalhos" titulo={t('Atalhos')}>
               <ul className="atalhos">
                 {ATALHOS.map((a) => (
                   <li key={a.to}>
                     <Link to={a.to} className="atalho">
                       <Icone nome={a.icone} tamanho={22} />
                       <span>
-                        <strong>{a.titulo}</strong>
-                        <small>{a.texto}</small>
+                        <strong>{t(a.titulo)}</strong>
+                        <small>{t(a.texto)}</small>
                       </span>
                       <Icone nome="seta" tamanho={18} className="atalho__seta" />
                     </Link>

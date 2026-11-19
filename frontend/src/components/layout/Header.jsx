@@ -7,16 +7,19 @@ import { ROTULO_PERFIL } from '../../util'
 import { Avatar } from '../ui/Basicos.jsx'
 import Icone from '../ui/Icone.jsx'
 import Migalhas from './Migalhas.jsx'
+import SeletorIdioma from '../SeletorIdioma.jsx'
+import { t } from '../../i18n/index.jsx'
 
 export default function Header({ rotas, onMenu }) {
   return (
     <header className="header">
-      <button type="button" className="btn-icone header__menu" onClick={onMenu} aria-label="Abrir menu">
+      <button type="button" className="btn-icone header__menu" onClick={onMenu} aria-label={t('Abrir menu')}>
         <Icone nome="menu" />
       </button>
       <Migalhas rotas={rotas} />
       <div className="header__acoes">
         <Busca />
+        <SeletorIdioma />
         <Avisos />
         <MenuPerfil />
       </div>
@@ -57,13 +60,13 @@ function Busca() {
         }}
       >
         <label className="so-leitor" htmlFor="busca-global">
-          Buscar
+          {t('Buscar')}
         </label>
         <Icone nome="busca" tamanho={18} className="busca__icone" />
         <input
           id="busca-global"
           type="search"
-          placeholder="Buscar"
+          placeholder={t('Buscar')}
           autoComplete="off"
           value={termo}
           aria-expanded={aberto && termo.trim().length >= 2}
@@ -80,7 +83,7 @@ function Busca() {
       {aberto && termo.trim().length >= 2 && (
         <div className="popover popover--busca" id="busca-resultados">
           {resultados.length === 0 ? (
-            <p className="popover__vazio">Nada encontrado para “{termo.trim()}”.</p>
+            <p className="popover__vazio">{t('Nada encontrado para “{termo}”.', { termo: termo.trim() })}</p>
           ) : (
             grupos.map((g) => (
               <div key={g.nome}>
@@ -117,16 +120,16 @@ function Avisos() {
         className="btn-icone"
         onClick={alternar}
         aria-expanded={aberto}
-        aria-label={avisos.length > 0 ? `Avisos, ${avisos.length} no total` : 'Avisos'}
+        aria-label={avisos.length > 0 ? t('Avisos, {n} no total', { n: avisos.length }) : t('Avisos')}
       >
         <Icone nome="sino" />
         {avisos.length > 0 && <span className="sino__contador">{avisos.length}</span>}
       </button>
       {aberto && (
         <div className="popover popover--avisos">
-          <p className="popover__titulo">Avisos</p>
+          <p className="popover__titulo">{t('Avisos')}</p>
           {avisos.length === 0 ? (
-            <p className="popover__vazio">Nenhum aviso no momento.</p>
+            <p className="popover__vazio">{t('Nenhum aviso no momento.')}</p>
           ) : (
             <ul>
               {avisos.map((a) => {
@@ -153,7 +156,7 @@ function Avisos() {
               })}
             </ul>
           )}
-          <p className="popover__nota">Avisos calculados com os dados atuais do sistema.</p>
+          <p className="popover__nota">{t('Avisos calculados com os dados atuais do sistema.')}</p>
         </div>
       )}
     </div>
@@ -167,9 +170,9 @@ function MenuPerfil() {
   return (
     <div className="menu-perfil" ref={ref}>
       <button type="button" className="menu-perfil__botao" onClick={alternar} aria-expanded={aberto} aria-haspopup="menu">
-        <Avatar nome={usuario.nome} />
+        <Avatar nome={t(usuario.nome)} />
         <span className="menu-perfil__texto">
-          <strong>{usuario.nome}</strong>
+          <strong>{t(usuario.nome)}</strong>
           <small>{ROTULO_PERFIL[usuario.perfil] ?? usuario.perfil}</small>
         </span>
         <Icone nome="baixo" tamanho={16} />
@@ -177,10 +180,10 @@ function MenuPerfil() {
       {aberto && (
         <div className="popover popover--perfil" role="menu">
           <Link to="/perfil" role="menuitem" className="popover__item" onClick={fechar}>
-            <Icone nome="usuario" tamanho={18} /> Meu perfil
+            <Icone nome="usuario" tamanho={18} /> {t('Meu perfil')}
           </Link>
           <button type="button" role="menuitem" className="popover__item" onClick={sair}>
-            <Icone nome="sair" tamanho={18} /> Sair
+            <Icone nome="sair" tamanho={18} /> {t('Sair')}
           </button>
         </div>
       )}

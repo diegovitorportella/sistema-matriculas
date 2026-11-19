@@ -6,6 +6,7 @@ import { Carga, CabecalhoPagina, Estatisticas, EsqueletoTabela, Selo, Vazio } fr
 import { Confirmar } from '../../components/ui/Modal.jsx'
 import { useToast } from '../../toast.jsx'
 import { ROTULO_TIPO, formatarData } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 export default function MinhasMatriculas() {
   const notificar = useToast()
@@ -21,7 +22,7 @@ export default function MinhasMatriculas() {
     setOcupado(true)
     try {
       await aluno.cancelar(cancelando)
-      notificar(`Matrícula em ${cancelando.disciplinaCodigo} cancelada. A vaga foi liberada.`)
+      notificar(t('Matrícula em {codigo} cancelada. A vaga foi liberada.', { codigo: cancelando.disciplinaCodigo }))
       setCancelando(null)
     } catch (e) {
       notificar(e.message, 'erro')
@@ -33,12 +34,12 @@ export default function MinhasMatriculas() {
   return (
     <>
       <CabecalhoPagina
-        titulo="Minhas matrículas"
-        descricao={periodo ? `Matrículas ativas no semestre ${periodo.semestre}. Cancelamentos são aceitos até ${formatarData(periodo.fim)}.` : 'Seu histórico de matrículas aparece aqui durante o período.'}
+        titulo={t('Minhas matrículas')}
+        descricao={periodo ? t('Matrículas ativas no semestre {semestre}. Cancelamentos são aceitos até {data}.', { semestre: periodo.semestre, data: formatarData(periodo.fim) }) : t('Seu histórico de matrículas aparece aqui durante o período.')}
         acoes={
           periodo && (
             <Link to="/matricula" className="btn btn--secundario">
-              Ir para o plano
+             {t('Ir para o plano')}
             </Link>
           )
         }
@@ -46,14 +47,14 @@ export default function MinhasMatriculas() {
 
       <Carga carregando={carregando} erro={erro} onTentar={recarregar} esqueleto={<EsqueletoTabela />}>
         {!periodo ? (
-          <Vazio icone="calendario" titulo="Sem período aberto" texto="Quando houver um período de matrículas, suas disciplinas aparecerão aqui." />
+          <Vazio icone="calendario" titulo={t('Sem período aberto')} texto={t('Quando houver um período de matrículas, suas disciplinas aparecerão aqui.')} />
         ) : minhas.length === 0 ? (
           <Vazio
-            titulo="Você ainda não tem matrículas"
-            texto="Escolha disciplinas no catálogo e confirme o plano."
+            titulo={t('Você ainda não tem matrículas')}
+            texto={t('Escolha disciplinas no catálogo e confirme o plano.')}
             acao={
               <Link to="/catalogo" className="btn btn--primario">
-                Ir para o catálogo
+               {t('Ir para o catálogo')}
               </Link>
             }
           />
@@ -61,23 +62,23 @@ export default function MinhasMatriculas() {
           <>
             <Estatisticas
               itens={[
-                { valor: minhas.length, rotulo: minhas.length === 1 ? 'Disciplina' : 'Disciplinas' },
-                { valor: creditos, rotulo: 'Créditos' },
-                { valor: `${minhas.filter((m) => m.tipo === 'OBRIGATORIA').length}/4`, rotulo: 'Primeira opção' },
-                { valor: `${minhas.filter((m) => m.tipo === 'OPTATIVA').length}/2`, rotulo: 'Alternativas' },
+                { valor: minhas.length, rotulo: minhas.length === 1 ? t('Disciplina') : t('Disciplinas') },
+                { valor: creditos, rotulo: t('Créditos') },
+                { valor: `${minhas.filter((m) => m.tipo === 'OBRIGATORIA').length}/4`, rotulo: t('Primeira opção') },
+                { valor: `${minhas.filter((m) => m.tipo === 'OPTATIVA').length}/2`, rotulo: t('Alternativas') },
               ]}
             />
             <div className="tabela-caixa espaco-topo">
               <table className="tabela tabela--cartoes">
                 <thead>
                   <tr>
-                    <th scope="col">Disciplina</th>
-                    <th scope="col">Professor</th>
-                    <th scope="col">Créditos</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Matriculado em</th>
+                    <th scope="col">{t('Disciplina')}</th>
+                    <th scope="col">{t('Professor')}</th>
+                    <th scope="col">{t('Créditos')}</th>
+                    <th scope="col">{t('Tipo')}</th>
+                    <th scope="col">{t('Matriculado em')}</th>
                     <th scope="col" className="tabela__acoes-cab">
-                      Ação
+                     {t('Ação')}
                     </th>
                   </tr>
                 </thead>
@@ -91,20 +92,20 @@ export default function MinhasMatriculas() {
                             <img className="tabela__miniatura" alt="" src={`/fotos/${fotoDaDisciplina(d ?? { codigo: m.disciplinaCodigo, nome: m.disciplinaNome })}.jpg`} loading="lazy" />
                             <div>
                               <strong>{m.disciplinaCodigo}</strong>
-                              <small>{m.disciplinaNome}</small>
+                              <small>{t(m.disciplinaNome)}</small>
                             </div>
                           </div>
                         </td>
-                        <td data-rotulo="Professor">{d?.professorNome || 'A definir'}</td>
-                        <td data-rotulo="Créditos">{d?.creditos ?? '-'}</td>
-                        <td data-rotulo="Tipo">
+                        <td data-rotulo={t('Professor')}>{d?.professorNome || t('A definir')}</td>
+                        <td data-rotulo={t('Créditos')}>{d?.creditos ?? '-'}</td>
+                        <td data-rotulo={t('Tipo')}>
                           <Selo tom={m.tipo === 'OBRIGATORIA' ? 'bordo' : 'ouro'}>{ROTULO_TIPO[m.tipo]}</Selo>
                         </td>
-                        <td data-rotulo="Matriculado em">{formatarData(m.dataMatricula)}</td>
+                        <td data-rotulo={t('Matriculado em')}>{formatarData(m.dataMatricula)}</td>
                         <td className="tabela__celula-acoes">
                           <div className="tabela__acoes">
                             <button type="button" className="btn-texto btn-texto--perigo" onClick={() => setCancelando(m)}>
-                              Cancelar
+                             {t('Cancelar')}
                             </button>
                           </div>
                         </td>
@@ -124,13 +125,13 @@ export default function MinhasMatriculas() {
         onConfirmar={cancelar}
         ocupado={ocupado}
         perigo
-        titulo="Cancelar matrícula"
-        rotuloConfirmar="Cancelar matrícula"
+        titulo={t('Cancelar matrícula')}
+        rotuloConfirmar={t('Cancelar matrícula')}
         texto={
           cancelando && (
             <p>
-              Cancelar a matrícula em <strong>{cancelando.disciplinaCodigo}</strong> ({cancelando.disciplinaNome})? A vaga será liberada e o
-              sistema de cobranças será atualizado.
+              {t('Cancelar a matrícula em')} <strong>{cancelando.disciplinaCodigo}</strong> ({t(cancelando.disciplinaNome)})?{' '}
+              {t('A vaga será liberada e o sistema de cobranças será atualizado.')}
             </p>
           )
         }

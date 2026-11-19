@@ -5,6 +5,7 @@ import { Carga, Estatisticas, Progresso, Secao, Selo, Vazio } from '../../compon
 import { Rosca } from '../../components/ui/Graficos.jsx'
 import Hero from '../../components/ui/Hero.jsx'
 import { LIMITES, ROTULO_TIPO, diasAte, formatarData, plural, primeiroNome, progressoPeriodo } from '../../util'
+import { t } from '../../i18n/index.jsx'
 
 export default function AlunoInicio() {
   const { usuario } = useAuth()
@@ -21,23 +22,23 @@ export default function AlunoInicio() {
       <Hero
         foto="campus"
         posicao="center 42%"
-        titulo={`Boas-vindas, ${primeiroNome(usuario.nome)}`}
+        titulo={t('Boas-vindas, {nome}', { nome: primeiroNome(t(usuario.nome)) })}
         acoes={
           periodo && (
             <>
               <Link to="/catalogo" className="btn btn--ouro">
-                Explorar o catálogo
+               {t('Explorar o catálogo')}
               </Link>
               <Link to="/matricula" className="btn btn--claro">
-                Montar plano de matrícula
+               {t('Montar plano de matrícula')}
               </Link>
             </>
           )
         }
       >
         {periodo
-          ? `As matrículas de ${periodo.semestre} estão abertas até ${formatarData(periodo.fim)}.`
-          : 'Não há período de matrículas aberto no momento.'}
+          ? t('As matrículas de {semestre} estão abertas até {data}.', { semestre: periodo.semestre, data: formatarData(periodo.fim) })
+          : t('Não há período de matrículas aberto no momento.')}
       </Hero>
 
       <div className="pagina-corpo">
@@ -45,73 +46,73 @@ export default function AlunoInicio() {
           {!periodo ? (
             <Vazio
               icone="calendario"
-              titulo="Matrículas fechadas"
-              texto="Quando a secretaria abrir o próximo período, você poderá montar seu plano aqui."
+              titulo={t('Matrículas fechadas')}
+              texto={t('Quando a secretaria abrir o próximo período, você poderá montar seu plano aqui.')}
             />
           ) : (
             <>
               <Estatisticas
                 itens={[
-                  { valor: `${primeira}/${LIMITES.OBRIGATORIA}`, rotulo: 'Primeira opção', detalhe: 'disciplinas matriculadas' },
-                  { valor: `${alternativas}/${LIMITES.OPTATIVA}`, rotulo: 'Alternativas', detalhe: 'disciplinas matriculadas' },
-                  { valor: creditos, rotulo: 'Créditos', detalhe: 'nas disciplinas matriculadas' },
+                  { valor: `${primeira}/${LIMITES.OBRIGATORIA}`, rotulo: t('Primeira opção'), detalhe: t('disciplinas matriculadas') },
+                  { valor: `${alternativas}/${LIMITES.OPTATIVA}`, rotulo: t('Alternativas'), detalhe: t('disciplinas matriculadas') },
+                  { valor: creditos, rotulo: t('Créditos'), detalhe: t('nas disciplinas matriculadas') },
                   {
                     valor: dias,
-                    rotulo: dias === 1 ? 'Dia restante' : 'Dias restantes',
-                    detalhe: `até ${formatarData(periodo.fim)}`,
+                    rotulo: dias === 1 ? t('Dia restante') : t('Dias restantes'),
+                    detalhe: t('até {data}', { data: formatarData(periodo.fim) }),
                   },
                 ]}
               />
 
               <div className="duas-colunas">
-                <Secao id="plano" titulo="Seu plano" descricao="As 6 vagas do semestre: 4 de primeira opção e 2 alternativas.">
+                <Secao id="plano" titulo={t('Seu plano')} descricao={t('As 6 vagas do semestre: 4 de primeira opção e 2 alternativas.')}>
                   <Rosca
                     centro={`${minhas.length}`}
-                    rotuloCentro={`de ${total} vagas`}
+                    rotuloCentro={t('de {total} vagas', { total })}
                     dados={[
-                      { rotulo: 'Primeira opção', valor: primeira, cor: 'var(--bordo-600)' },
-                      { rotulo: 'Alternativas', valor: alternativas, cor: 'var(--ouro-500)' },
-                      { rotulo: 'Vagas livres', valor: total - minhas.length, cor: 'var(--creme-300)' },
+                      { rotulo: t('Primeira opção'), valor: primeira, cor: 'var(--bordo-600)' },
+                      { rotulo: t('Alternativas'), valor: alternativas, cor: 'var(--ouro-500)' },
+                      { rotulo: t('Vagas livres'), valor: total - minhas.length, cor: 'var(--creme-300)' },
                     ]}
                   />
                   {plano.length > 0 && (
                     <p className="nota nota--ambar">
-                      {plural(plano.length, 'disciplina aguarda', 'disciplinas aguardam')} confirmação no{' '}
-                      <Link to="/matricula">plano de matrícula</Link>.
+                      {plural(plano.length, 'disciplina aguarda', 'disciplinas aguardam')} {t('confirmação no')}{' '}
+                      <Link to="/matricula">{t('plano de matrícula')}</Link>.
                     </p>
                   )}
                 </Secao>
 
-                <Secao id="prazo" titulo="Prazo do semestre" descricao={`Período de matrículas de ${periodo.semestre}.`}>
-                  <Progresso valor={Math.round(progressoPeriodo(periodo.inicio, periodo.fim) * 100)} max={100} rotulo="Progresso do período de matrículas" tom="ouro" />
+                <Secao id="prazo" titulo={t('Prazo do semestre')} descricao={t('Período de matrículas de {semestre}.', { semestre: periodo.semestre })}>
+                  <Progresso valor={Math.round(progressoPeriodo(periodo.inicio, periodo.fim) * 100)} max={100} rotulo={t('Progresso do período de matrículas')} tom="ouro" />
                   <div className="linha-tempo">
                     <span>{formatarData(periodo.inicio)}</span>
                     <span>{formatarData(periodo.fim)}</span>
                   </div>
                   <ul className="regras">
-                    <li>Disciplinas com menos de 3 alunos ao fim do período são canceladas.</li>
-                    <li>Cada disciplina aceita até 60 alunos; ao lotar, as inscrições se encerram.</li>
-                    <li>Você pode cancelar matrículas até o fim do período.</li>
+                    <li>{t('Disciplinas com menos de 3 alunos ao fim do período são canceladas.')}</li>
+                    <li>{t('Cada disciplina aceita até 60 alunos; ao lotar, as inscrições se encerram.')}</li>
+                    <li>{t('Você pode cancelar matrículas até o fim do período.')}</li>
                   </ul>
                 </Secao>
               </div>
 
               <Secao
                 id="matriculas"
-                titulo="Matrículas atuais"
+                titulo={t('Matrículas atuais')}
                 acoes={
                   <Link to="/minhas-matriculas" className="btn btn--secundario btn--sm">
-                    Ver todas
+                   {t('Ver todas')}
                   </Link>
                 }
               >
                 {minhas.length === 0 ? (
                   <Vazio
-                    titulo="Você ainda não se matriculou"
-                    texto="Escolha disciplinas no catálogo e confirme o plano."
+                    titulo={t('Você ainda não se matriculou')}
+                    texto={t('Escolha disciplinas no catálogo e confirme o plano.')}
                     acao={
                       <Link to="/catalogo" className="btn btn--primario">
-                        Ir para o catálogo
+                       {t('Ir para o catálogo')}
                       </Link>
                     }
                   />
@@ -120,7 +121,7 @@ export default function AlunoInicio() {
                     {minhas.map((m) => (
                       <li key={m.id}>
                         <span>
-                          <strong>{m.disciplinaCodigo}</strong> {m.disciplinaNome}
+                          <strong>{m.disciplinaCodigo}</strong> {t(m.disciplinaNome)}
                         </span>
                         <Selo tom={m.tipo === 'OBRIGATORIA' ? 'bordo' : 'ouro'}>{ROTULO_TIPO[m.tipo]}</Selo>
                       </li>

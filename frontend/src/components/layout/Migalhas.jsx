@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Link, matchPath, useLocation } from 'react-router-dom'
+import { t } from '../../i18n/index.jsx'
 
 const MigalhaContext = createContext({ rotulo: null, definir: () => {} })
 
@@ -28,7 +29,7 @@ function trilha(pathname, rotas, ultimo) {
     r = r.pai ? rotas.find((x) => x.path === r.pai) : null
   }
   return cadeia.map((r, i) => ({
-    rotulo: i === cadeia.length - 1 && ultimo ? ultimo : r.titulo,
+    rotulo: i === cadeia.length - 1 && ultimo ? ultimo : t(r.titulo),
     to: i < cadeia.length - 1 ? r.path : null,
   }))
 }
@@ -40,10 +41,10 @@ export default function Migalhas({ rotas }) {
   const inicio = rotas.find((r) => r.path === '/inicio')
 
   // A página inicial é a raiz; nas demais, ela abre a trilha.
-  const completa = pathname === '/inicio' ? itens : [{ rotulo: 'Início', to: inicio?.path ?? '/inicio' }, ...itens]
+  const completa = pathname === '/inicio' ? itens : [{ rotulo: t('Início'), to: inicio?.path ?? '/inicio' }, ...itens]
 
   return (
-    <nav className="migalhas" aria-label="Você está em">
+    <nav className="migalhas" aria-label={t('Você está em')}>
       <ol>
         {completa.map((m, i) => (
           <li key={`${m.rotulo}-${i}`}>

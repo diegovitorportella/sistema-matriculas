@@ -4,6 +4,7 @@ import CreditosFotos from '../ui/CreditosFotos.jsx'
 import Header from './Header.jsx'
 import { MigalhasProvider } from './Migalhas.jsx'
 import Sidebar from './Sidebar.jsx'
+import { t } from '../../i18n/index.jsx'
 
 export default function AppShell({ rotas }) {
   const [menuAberto, setMenuAberto] = useState(false)
@@ -20,7 +21,7 @@ export default function AppShell({ rotas }) {
     <MigalhasProvider>
       <div className="app">
         <a href="#conteudo" className="pular-conteudo">
-          Pular para o conteúdo
+          {t('Pular para o conteúdo')}
         </a>
         <Sidebar itens={navegacao} aberto={menuAberto} onFechar={() => setMenuAberto(false)} />
         {menuAberto && <div className="app__veu" onClick={() => setMenuAberto(false)} aria-hidden="true" />}
@@ -30,9 +31,9 @@ export default function AppShell({ rotas }) {
             <Outlet />
           </main>
           <footer className="rodape">
-            <p>Horizon University, Belo Horizonte, Brazil. Instituição fictícia criada para fins acadêmicos.</p>
+            <p>{t('Horizon University, Belo Horizonte, Brazil. Instituição fictícia criada para fins acadêmicos.')}</p>
             <button type="button" className="btn-texto" onClick={() => setCreditos(true)}>
-              Créditos das fotografias
+              {t('Créditos das fotografias')}
             </button>
           </footer>
         </div>

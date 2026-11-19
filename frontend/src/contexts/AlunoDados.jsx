@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { disciplinas, matriculas, periodos } from '../services'
 import { LIMITES, contem, diasAte, formatarData, plural } from '../util'
 import { ShellDados } from './ShellDados.js'
+import { t, useIdioma } from '../i18n/index.jsx'
 
 const AlunoContext = createContext(null)
 export const useAluno = () => useContext(AlunoContext)
@@ -27,6 +28,7 @@ function guardarPlano(plano) {
 }
 
 export function AlunoProvider({ children }) {
+  const { idioma } = useIdioma() // avisos e busca são recalculados ao trocar de idioma
   const [estado, setEstado] = useState({ carregando: true, erro: null, periodo: null, ofertadas: [], minhas: [] })
   const [plano, setPlanoBruto] = useState(lerPlano)
 
@@ -90,11 +92,11 @@ export function AlunoProvider({ children }) {
   /** Devolve uma mensagem de erro, ou null quando a disciplina entrou no plano. */
   const adicionar = useCallback(
     (disciplinaId, tipo) => {
-      if (situacao(disciplinaId) !== 'livre') return 'Esta disciplina já está no seu plano ou matriculada.'
+      if (situacao(disciplinaId) !== 'livre') return t('Esta disciplina já está no seu plano ou matriculada.')
       if (usados(tipo) >= LIMITES[tipo]) {
         return tipo === 'OBRIGATORIA'
-          ? 'As 4 vagas de primeira opção já estão ocupadas.'
-          : 'As 2 vagas de alternativa já estão ocupadas.'
+          ? t('As 4 vagas de primeira opção já estão ocupadas.')
+          : t('As 2 vagas de alternativa já estão ocupadas.')
       }
       setPlano((p) => [...p, { disciplinaId, tipo }])
       return null
@@ -109,7 +111,7 @@ export function AlunoProvider({ children }) {
       const atual = planoValido.find((p) => p.disciplinaId === disciplinaId)
       if (!atual) return null
       const novo = atual.tipo === 'OBRIGATORIA' ? 'OPTATIVA' : 'OBRIGATORIA'
-      if (usados(novo) >= LIMITES[novo]) return 'Não há vaga livre nesse tipo.'
+      if (usados(novo) >= LIMITES[novo]) return t('Não há vaga livre nesse tipo.')
       setPlano((p) => p.map((x) => (x.disciplinaId === disciplinaId ? { ...x, tipo: novo } : x)))
       return null
     },
@@ -147,15 +149,15 @@ export function AlunoProvider({ children }) {
     const lista = []
     if (estado.carregando || estado.erro) return lista
     if (!periodo) {
-      lista.push({ id: 'fechado', tom: 'info', titulo: 'Matrículas fechadas', texto: 'Não há período de matrículas aberto no momento.' })
+      lista.push({ id: 'fechado', tom: 'info', titulo: t('Matrículas fechadas'), texto: t('Não há período de matrículas aberto no momento.') })
       return lista
     }
     const dias = diasAte(periodo.fim)
     lista.push({
       id: 'prazo',
       tom: dias <= 3 ? 'ambar' : 'info',
-      titulo: dias === 0 ? 'Último dia de matrículas' : `Matrículas terminam em ${plural(dias, 'dia', 'dias')}`,
-      texto: `Prazo final: ${formatarData(periodo.fim)}. Depois dele, disciplinas com menos de 3 alunos são canceladas.`,
+      titulo: dias === 0 ? t('Último dia de matrículas') : t('Matrículas terminam em {prazo}', { prazo: plural(dias, 'dia', 'dias') }),
+      texto: t('Prazo final: {data}. Depois dele, disciplinas com menos de 3 alunos são canceladas.', { data: formatarData(periodo.fim) }),
       to: '/matricula',
     })
     const livres = LIMITES.OBRIGATORIA - usados('OBRIGATORIA')
@@ -163,8 +165,8 @@ export function AlunoProvider({ children }) {
       lista.push({
         id: 'livres',
         tom: 'info',
-        titulo: `${plural(livres, 'vaga de primeira opção livre', 'vagas de primeira opção livres')}`,
-        texto: 'Escolha disciplinas no catálogo para completar o plano.',
+        titulo: plural(livres, 'vaga de primeira opção livre', 'vagas de primeira opção livres'),
+        texto: t('Escolha disciplinas no catálogo para completar o plano.'),
         to: '/catalogo',
       })
     }
@@ -172,16 +174,16 @@ export function AlunoProvider({ children }) {
       lista.push({
         id: 'rascunho',
         tom: 'ambar',
-        titulo: `${plural(planoValido.length, 'disciplina aguardando', 'disciplinas aguardando')} confirmação`,
-        texto: 'Revise o plano e confirme para efetivar a matrícula.',
+        titulo: plural(planoValido.length, 'disciplina aguardando confirmação', 'disciplinas aguardando confirmação'),
+        texto: t('Revise o plano e confirme para efetivar a matrícula.'),
         to: '/matricula',
       })
     }
     if (minhas.length === LIMITES.OBRIGATORIA + LIMITES.OPTATIVA) {
-      lista.push({ id: 'completo', tom: 'verde', titulo: 'Plano completo', texto: 'Suas 6 vagas estão preenchidas.', to: '/minhas-matriculas' })
+      lista.push({ id: 'completo', tom: 'verde', titulo: t('Plano completo'), texto: t('Suas 6 vagas estão preenchidas.'), to: '/minhas-matriculas' })
     }
     return lista
-  }, [estado.carregando, estado.erro, periodo, usados, planoValido.length, minhas.length])
+  }, [estado.carregando, estado.erro, periodo, usados, planoValido.length, minhas.length, idioma])
 
   const buscar = useCallback(
     (termo) =>
@@ -189,12 +191,12 @@ export function AlunoProvider({ children }) {
         .filter((d) => contem(d, termo, ['codigo', 'nome', 'professorNome']))
         .slice(0, 6)
         .map((d) => ({
-          grupo: 'Disciplinas',
-          titulo: `${d.codigo} ${d.nome}`,
-          subtitulo: d.professorNome || 'Professor a definir',
+          grupo: t('Disciplinas'),
+          titulo: `${d.codigo} ${t(d.nome)}`,
+          subtitulo: d.professorNome || t('Professor a definir'),
           to: `/catalogo?q=${encodeURIComponent(d.codigo)}`,
         })),
-    [ofertadas],
+    [ofertadas, idioma],
   )
 
   const valor = useMemo(
