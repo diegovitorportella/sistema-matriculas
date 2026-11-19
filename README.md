@@ -10,6 +10,8 @@
   </picture>
 </p>
 
+<p align="center"><a href="README.en.md">🇺🇸 Read this README in English</a></p>
+
 ---
 
 ## 🚧 Status do Projeto
@@ -40,7 +42,7 @@
 
 **Acesse: https://sistema-matriculas-inky.vercel.app**
 
-Na tela de login, os botões **Entrar como aluno / professor / secretaria** abrem o portal com dados fictícios já cadastrados (3 cursos, 5 professores, 12 disciplinas, 14 alunos e um período de matrículas aberto). Todas as contas de demonstração usam a senha `demo12345`:
+O botão **PT | EN** (no login e no cabeçalho) alterna entre português e inglês. Na tela de login, os botões **Entrar como aluno / professor / secretaria** abrem o portal com dados fictícios já cadastrados (3 cursos, 5 professores, 12 disciplinas, 14 alunos e um período de matrículas aberto). Todas as contas de demonstração usam a senha `demo12345`:
 
 | Perfil | Usuário |
 | :--- | :--- |
@@ -116,6 +118,7 @@ Contexto: projeto acadêmico (Laboratório 03 — DIAW, Engenharia de Software, 
 - ✅ **Ativação de disciplinas:** ao fim do período, disciplinas com menos de 3 inscritos são canceladas; limite de 60 inscritos por disciplina.
 - 💳 **Integração com cobranças:** notificação ao sistema de cobranças após a matrícula.
 - 👨‍🏫 **Consulta de alunos por disciplina (professor).**
+- 🌐 **Interface em português e inglês:** o botão **PT | EN** troca o idioma na hora, inclusive os dados da demonstração (cursos e disciplinas).
 
 ---
 
