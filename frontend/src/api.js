@@ -1,3 +1,5 @@
+import { t } from './i18n/index.jsx'
+
 const BASE = import.meta.env.VITE_API_URL || '/api'
 const CHAVE_TOKEN = 'matriculas.token'
 
@@ -26,10 +28,10 @@ export function guardarToken(token) {
 }
 
 function mensagemPadrao(status) {
-  if (status === 403) return 'Você não tem permissão para esta ação.'
-  if (status === 404) return 'Item não encontrado.'
-  if (status >= 500) return 'Erro no servidor. Tente novamente em instantes.'
-  return 'Não foi possível concluir a ação.'
+  if (status === 403) return t('Você não tem permissão para esta ação.')
+  if (status === 404) return t('Item não encontrado.')
+  if (status >= 500) return t('Erro no servidor. Tente novamente em instantes.')
+  return t('Não foi possível concluir a ação.')
 }
 
 export async function api(caminho, { method = 'GET', corpo } = {}) {
@@ -46,7 +48,7 @@ export async function api(caminho, { method = 'GET', corpo } = {}) {
       body: corpo !== undefined ? JSON.stringify(corpo) : undefined,
     })
   } catch {
-    throw new ApiError('Não foi possível falar com o servidor. Confira se o back-end está em execução.', 0)
+    throw new ApiError(t('Não foi possível falar com o servidor. Confira se o back-end está em execução.'), 0)
   }
 
   if (resposta.status === 401 && token && caminho !== '/auth/login') {
@@ -64,7 +66,7 @@ export async function api(caminho, { method = 'GET', corpo } = {}) {
   }
 
   if (!resposta.ok) {
-    throw new ApiError(dados?.erro || mensagemPadrao(resposta.status), resposta.status)
+    throw new ApiError(dados?.erro ? t(dados.erro) : mensagemPadrao(resposta.status), resposta.status)
   }
   return dados
 }

@@ -212,6 +212,7 @@
 }
 
 .entrada__painel {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -922,3 +923,10 @@
 .entrada__demo-titulo { font-family: var(--fonte-serif); font-size: 1.05rem; margin: 0 0 .15rem; }
 .entrada__demo-texto { margin: 0 0 .85rem; font-size: .875rem; color: var(--grafite-500); }
 .entrada__demo-acoes { display: grid; gap: .5rem; }
+
+/* Seletor de idioma no canto do painel de login */
+.entrada__idioma {
+  position: absolute;
+  top: var(--e5);
+  right: var(--e5);
+}

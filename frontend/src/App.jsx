@@ -4,8 +4,9 @@ import Brasao from './components/Brasao.jsx'
 import AppShell from './components/layout/AppShell.jsx'
 import Login from './pages/comum/Login.jsx'
 import { PERFIS } from './routes.jsx'
+import { t, useIdioma } from './i18n/index.jsx'
 
-function TelaCarregando({ texto = 'Carregando' }) {
+function TelaCarregando({ texto = t('Carregando') }) {
   return (
     <div className="tela-carregando" role="status">
       <Brasao tamanho={56} />
@@ -16,12 +17,14 @@ function TelaCarregando({ texto = 'Carregando' }) {
 
 export default function App() {
   const { usuario, pronto } = useAuth()
+  // Trocar o idioma remonta só as rotas (os dados carregados nos provedores continuam valendo).
+  const { idioma } = useIdioma()
 
   if (!pronto) return <TelaCarregando />
 
   if (!usuario) {
     return (
-      <Routes>
+      <Routes key={idioma}>
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
@@ -32,7 +35,7 @@ export default function App() {
   if (!config) {
     return (
       <div className="tela-carregando">
-        <p>Este perfil não tem acesso configurado no portal.</p>
+        <p>{t('Este perfil não tem acesso configurado no portal.')}</p>
       </div>
     )
   }
@@ -40,7 +43,7 @@ export default function App() {
   const { rotas, Provedor } = config
   return (
     <Provedor>
-      <Routes>
+      <Routes key={idioma}>
         <Route element={<AppShell rotas={rotas} />}>
           {rotas.map((r) => (
             <Route key={r.path} path={r.path} element={r.elemento} />
